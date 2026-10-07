@@ -52,11 +52,37 @@ The system features an automated unattended production pipeline that runs on sch
 
 ---
 
+## 🌐 Web Application (FastAPI + React TypeScript + Tailwind)
+
+An interactive, responsive sports analytics platform for live match forecasting and head-to-head simulations:
+- **Interactive Match Arena**: Select any two clubs, customize rest days to simulate fatigue, and view Master Tri-Hybrid win probabilities, expected goals ($\lambda_H$ vs $\lambda_A$), Strategy A margin verdicts, and top scorelines.
+- **Tale of the Tape**: Side-by-side metric comparison (Elo ratings, baseline xG, xGA, net xGD, recent form, shots on target).
+- **Game-Week Hub**: All upcoming matchday fixtures (e.g. Game-Week 6) with model consensus and probabilities.
+- **Elo Power Rankings**: Full Premier League table ranked by model Elo ratings and rolling xGD.
+
+### 🚀 Running the Web App
+
+#### Option A: Unified Single-Server (Production)
+Run one command from the project root:
+```bash
+uvicorn api.main:app --port 8000
+```
+Open [http://localhost:8000](http://localhost:8000) in your browser.
+
+#### Option B: Development Mode (Hot-Reloading)
+- **Backend**:
+  ```bash
+  uvicorn api.main:app --reload --port 8000
+  ```
+- **Frontend**:
+  ```bash
+  cd frontend && npm run dev
+  ```
+  Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
 ## 🛠️ Tech Stack
-- **Python 3.12 / 3.13**
-- **Pandas & NumPy**: Vectorized time-series manipulations & dual-horizon rolling windows
-- **Scikit-Learn**: TimeSeriesSplit, probability calibration, threshold optimization
-- **XGBoost**: Gradient boosted trees for classification & margin regression
-- **SciPy**: Bivariate Poisson distributions & Dixon-Coles optimization
-- **Requests**: Live API connection to `football-data.org`
-- **GitHub Actions**: Scheduled cron orchestration & automated model synchronization
+- **Python 3.12 / 3.13** (FastAPI, Scikit-Learn, XGBoost, SciPy, Pandas, NumPy)
+- **TypeScript & React** (Vite, Tailwind CSS v4, Lucide Icons)
+- **GitHub Actions**: Scheduled weekly cron orchestration & automated model synchronization
