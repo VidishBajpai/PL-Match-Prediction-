@@ -39,10 +39,24 @@ The project is structured into three clean, self-contained notebooks with markdo
 
 ---
 
+## 🤖 Automated Weekly Pipeline & GitHub Actions CI/CD
+
+The system features an automated unattended production pipeline that runs on schedule:
+- **Weekly Schedule**:
+  - **Tuesdays @ 06:00 UTC**: Runs immediately after Monday Night Football to ingest new match scores, recalculate dynamic Elo ratings, and update rolling Actual xG form.
+  - **Fridays @ 06:00 UTC**: Runs ahead of the weekend kickoff to refresh models and publish an updated game-week prediction bulletin.
+  - **Manual Trigger (`workflow_dispatch`)**: Can be triggered manually anytime via GitHub Actions UI with one click.
+- **Pipeline Runner**: [`scripts/weekly_pipeline.py`](scripts/weekly_pipeline.py)
+- **GitHub Workflow**: [`.github/workflows/weekly_predict.yml`](.github/workflows/weekly_predict.yml)
+- **Live Output**: Automatically commits fresh models, updates the dataset, and writes the game-week briefing to [`reports/latest_gameweek_predictions.md`](reports/latest_gameweek_predictions.md) (also published as a GitHub Action Job Summary).
+
+---
+
 ## 🛠️ Tech Stack
-- **Python 3.13**
+- **Python 3.12 / 3.13**
 - **Pandas & NumPy**: Vectorized time-series manipulations & dual-horizon rolling windows
 - **Scikit-Learn**: TimeSeriesSplit, probability calibration, threshold optimization
 - **XGBoost**: Gradient boosted trees for classification & margin regression
 - **SciPy**: Bivariate Poisson distributions & Dixon-Coles optimization
 - **Requests**: Live API connection to `football-data.org`
+- **GitHub Actions**: Scheduled cron orchestration & automated model synchronization
