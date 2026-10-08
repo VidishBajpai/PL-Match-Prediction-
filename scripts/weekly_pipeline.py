@@ -607,13 +607,16 @@ def generate_gameweek_report(latest_stats, xg_dc_model, calibrated_xgb, margin_r
     if not fixtures:
         print("No scheduled fixtures returned by API. Using upcoming marquee matchday pairings.")
         fixtures = [
-            {'Date': '2026-09-26', 'Matchday': 6, 'Home': 'Arsenal', 'Away': 'Newcastle'},
-            {'Date': '2026-09-26', 'Matchday': 6, 'Home': 'Chelsea', 'Away': 'Brighton'},
-            {'Date': '2026-09-26', 'Matchday': 6, 'Home': 'Liverpool', 'Away': 'Tottenham'},
-            {'Date': '2026-09-27', 'Matchday': 6, 'Home': 'Man City', 'Away': 'Man United'},
-            {'Date': '2026-09-27', 'Matchday': 6, 'Home': 'Aston Villa', 'Away': 'Everton'},
-            {'Date': '2026-09-27', 'Matchday': 6, 'Home': 'Brentford', 'Away': 'Fulham'},
-            {'Date': '2026-09-28', 'Matchday': 6, 'Home': 'Bournemouth', 'Away': 'Ipswich'}
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Newcastle', 'Away': 'Man City'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Arsenal', 'Away': 'Leicester'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Brentford', 'Away': 'West Ham'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Chelsea', 'Away': 'Brighton'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Everton', 'Away': 'Crystal Palace'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': "Nott'm Forest", 'Away': 'Fulham'},
+            {'Date': '2024-09-28', 'Matchday': 6, 'Home': 'Wolves', 'Away': 'Liverpool'},
+            {'Date': '2024-09-29', 'Matchday': 6, 'Home': 'Ipswich', 'Away': 'Aston Villa'},
+            {'Date': '2024-09-29', 'Matchday': 6, 'Home': 'Man United', 'Away': 'Tottenham'},
+            {'Date': '2024-09-30', 'Matchday': 6, 'Home': 'Bournemouth', 'Away': 'Southampton'}
         ]
 
     predictions = []

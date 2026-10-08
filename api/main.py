@@ -395,16 +395,16 @@ def get_power_rankings():
 def get_gameweek_fixtures():
     """Returns upcoming game-week fixtures with precomputed forecasts."""
     fixtures = [
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'West Ham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Wolves', 'away': 'Brighton'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Chelsea', 'away': 'Bournemouth'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Ipswich', 'away': 'Fulham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Aston Villa', 'away': 'Brentford'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Leicester', 'away': 'Everton'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Crystal Palace', 'away': "Nott'm Forest"},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Liverpool', 'away': 'Man City'},
-        {'date': '2026-10-12', 'matchday': 6, 'home': 'Southampton', 'away': 'Newcastle'}
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Newcastle', 'away': 'Man City'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Arsenal', 'away': 'Leicester'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Brentford', 'away': 'West Ham'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Chelsea', 'away': 'Brighton'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Everton', 'away': 'Crystal Palace'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': "Nott'm Forest", 'away': 'Fulham'},
+        {'date': '2024-09-28', 'matchday': 6, 'home': 'Wolves', 'away': 'Liverpool'},
+        {'date': '2024-09-29', 'matchday': 6, 'home': 'Ipswich', 'away': 'Aston Villa'},
+        {'date': '2024-09-29', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
+        {'date': '2024-09-30', 'matchday': 6, 'home': 'Bournemouth', 'away': 'Southampton'}
     ]
 
     results = []
