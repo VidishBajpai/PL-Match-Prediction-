@@ -7,7 +7,7 @@ import { Calendar, RefreshCw, Sparkles, ShieldCheck } from 'lucide-react';
 // Default authentic 10-match Premier League Game-Week 6 schedule (all 20 current PL teams)
 const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Newcastle',
     away_team: 'Man City',
@@ -20,7 +20,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '1 - 2 (7.2%), 2 - 2 (6.9%), 1 - 3 (6.1%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Arsenal',
     away_team: 'Leicester',
@@ -33,7 +33,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 1 (8.2%), 3 - 1 (8.2%), 2 - 0 (7.4%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Brentford',
     away_team: 'West Ham',
@@ -46,7 +46,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 1 (7.4%), 2 - 2 (6.9%), 3 - 1 (6.2%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Chelsea',
     away_team: 'Brighton',
@@ -59,7 +59,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 2 (7.2%), 2 - 1 (7.0%), 1 - 2 (6.2%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Everton',
     away_team: 'Crystal Palace',
@@ -72,7 +72,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 1 (8.2%), 1 - 1 (7.5%), 2 - 2 (7.1%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: "Nott'm Forest",
     away_team: 'Fulham',
@@ -85,7 +85,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 1 (8.1%), 1 - 1 (7.1%), 2 - 2 (7.1%)',
   },
   {
-    date: '2024-09-28',
+    date: '2026-10-10',
     matchday: 6,
     home_team: 'Wolves',
     away_team: 'Liverpool',
@@ -98,7 +98,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '1 - 2 (7.3%), 2 - 2 (7.0%), 1 - 3 (6.0%)',
   },
   {
-    date: '2024-09-29',
+    date: '2026-10-11',
     matchday: 6,
     home_team: 'Ipswich',
     away_team: 'Aston Villa',
@@ -111,7 +111,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '1 - 2 (7.2%), 2 - 2 (7.2%), 1 - 1 (6.2%)',
   },
   {
-    date: '2024-09-29',
+    date: '2026-10-11',
     matchday: 6,
     home_team: 'Man United',
     away_team: 'Tottenham',
@@ -124,7 +124,7 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
     top_scores: '2 - 1 (7.2%), 2 - 2 (6.6%), 3 - 1 (6.5%)',
   },
   {
-    date: '2024-09-30',
+    date: '2026-10-12',
     matchday: 6,
     home_team: 'Bournemouth',
     away_team: 'Southampton',
