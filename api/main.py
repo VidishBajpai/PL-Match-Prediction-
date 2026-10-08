@@ -24,7 +24,7 @@ from scipy.stats import poisson
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 
 # Ensure project root is in sys.path
@@ -346,7 +346,10 @@ def get_teams():
         if name in CURRENT_PL_TEAMS
     ]
     sorted_teams = sorted(current_teams, key=lambda x: x['elo'], reverse=True)
-    return {"teams": sorted_teams}
+    return JSONResponse(
+        content={"teams": sorted_teams},
+        headers={"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
+    )
 
 
 @app.post("/api/predict", response_model=PredictionResponse)
@@ -368,21 +371,24 @@ def get_power_rankings():
         if c["name"] in CURRENT_PL_TEAMS
     ]
     sorted_clubs = sorted(clubs, key=lambda x: x['elo'], reverse=True)
-    return {
-        "rankings": [
-            {
-                "rank": idx + 1,
-                "team": c["name"],
-                "elo": c["elo"],
-                "xgd": c["long_xgd"],
-                "xg_created": c["long_xg"],
-                "xg_conceded": c["long_xga"],
-                "form_pts": c["short_form_5"],
-                "net_st": c["long_net_st"]
-            }
-            for idx, c in enumerate(sorted_clubs)
-        ]
-    }
+    return JSONResponse(
+        content={
+            "rankings": [
+                {
+                    "rank": idx + 1,
+                    "team": c["name"],
+                    "elo": c["elo"],
+                    "xgd": c["long_xgd"],
+                    "xg_created": c["long_xg"],
+                    "xg_conceded": c["long_xga"],
+                    "form_pts": c["short_form_5"],
+                    "net_st": c["long_net_st"]
+                }
+                for idx, c in enumerate(sorted_clubs)
+            ]
+        },
+        headers={"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
+    )
 
 
 @app.get("/api/gameweek")
@@ -421,7 +427,10 @@ def get_gameweek_fixtures():
         except Exception:
             continue
 
-    return {"gameweek": 6, "fixtures": results}
+    return JSONResponse(
+        content={"gameweek": 6, "fixtures": results},
+        headers={"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
+    )
 
 
 

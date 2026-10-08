@@ -143,13 +143,22 @@ export const GameWeekHub: React.FC = () => {
   const [gameweek, setGameweek] = useState<number>(6);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const isPLTeam = (teamName: string) =>
-    PREMIER_LEAGUE_CLUB_NAMES.includes(teamName as any);
+  const isPLTeam = (teamName: string) => {
+    if (!teamName) return false;
+    const clean = teamName.replace(/\s+FC$/i, '').replace(/\s+AFC$/i, '').trim();
+    return (
+      PREMIER_LEAGUE_CLUB_NAMES.includes(clean as any) ||
+      PREMIER_LEAGUE_CLUB_NAMES.includes(teamName as any)
+    );
+  };
 
   const fetchGameWeek = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/gameweek');
+      const res = await fetch(`/api/gameweek?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' },
+      });
       if (res.ok) {
         const data = await res.json();
         const incoming: GameWeekMatch[] = data.fixtures || [];
@@ -158,11 +167,11 @@ export const GameWeekHub: React.FC = () => {
           (m) => isPLTeam(m.home_team) && isPLTeam(m.away_team),
         );
 
-        if (filtered.length >= 5) {
+        if (filtered.length > 0) {
           setFixtures(filtered);
           setGameweek(data.gameweek || 6);
         } else {
-          // If the backend has fewer or non-PL teams, maintain authentic PL fixtures
+          // If the backend has non-PL teams, fallback to authentic PL fixtures
           setFixtures(AUTHENTIC_PL_GAMEWEEK_FIXTURES);
         }
       }
