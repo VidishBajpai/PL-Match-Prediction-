@@ -395,16 +395,16 @@ def get_power_rankings():
 def get_gameweek_fixtures():
     """Returns upcoming game-week fixtures with precomputed forecasts."""
     fixtures = [
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Newcastle', 'away': 'Man City'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'Leicester'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Brentford', 'away': 'West Ham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Chelsea', 'away': 'Brighton'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Everton', 'away': 'Crystal Palace'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': "Nott'm Forest", 'away': 'Fulham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Wolves', 'away': 'Liverpool'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Ipswich', 'away': 'Aston Villa'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
-        {'date': '2026-10-12', 'matchday': 6, 'home': 'Bournemouth', 'away': 'Southampton'}
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Chelsea', 'away': 'Bournemouth'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Ipswich', 'away': 'Fulham'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Aston Villa', 'away': 'Brentford'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'West Ham'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Newcastle', 'away': 'Wolves'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
+        {'date': '2026-10-11', 'matchday': 6, 'home': 'Everton', 'away': 'Leicester'},
+        {'date': '2026-10-11', 'matchday': 6, 'home': 'Crystal Palace', 'away': "Nott'm Forest"},
+        {'date': '2026-10-11', 'matchday': 6, 'home': 'Liverpool', 'away': 'Man City'},
+        {'date': '2026-10-12', 'matchday': 6, 'home': 'Brighton', 'away': 'Southampton'}
     ]
 
     results = []
