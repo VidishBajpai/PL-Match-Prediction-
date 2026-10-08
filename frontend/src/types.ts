@@ -68,4 +68,7 @@ export interface ClubInfo {
   primaryColor: string;
   accentColor: string;
   stadium: string;
+  logoUrl?: string;
+  altLogoUrl?: string;
 }
+

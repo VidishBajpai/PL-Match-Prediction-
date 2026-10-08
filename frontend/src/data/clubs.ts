@@ -30,6 +30,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#EF0107',
     accentColor: '#063672',
     stadium: 'Emirates Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t3.png',
+    altLogoUrl: 'https://crests.football-data.org/57.png',
   },
   'Aston Villa': {
     name: 'Aston Villa',
@@ -37,6 +39,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#670E36',
     accentColor: '#95BFE5',
     stadium: 'Villa Park',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t7.png',
+    altLogoUrl: 'https://crests.football-data.org/58.png',
   },
   'Bournemouth': {
     name: 'Bournemouth',
@@ -44,6 +48,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DA291C',
     accentColor: '#111111',
     stadium: 'Vitality Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t91.png',
+    altLogoUrl: 'https://crests.football-data.org/1044.png',
   },
   'Brentford': {
     name: 'Brentford',
@@ -51,6 +57,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#E30613',
     accentColor: '#F9A01B',
     stadium: 'Gtech Community Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t94.png',
+    altLogoUrl: 'https://crests.football-data.org/402.png',
   },
   'Brighton': {
     name: 'Brighton',
@@ -58,6 +66,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#0057B8',
     accentColor: '#FFCD00',
     stadium: 'Amex Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t36.png',
+    altLogoUrl: 'https://crests.football-data.org/397.png',
   },
   'Chelsea': {
     name: 'Chelsea',
@@ -65,6 +75,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#034694',
     accentColor: '#EE242C',
     stadium: 'Stamford Bridge',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t8.png',
+    altLogoUrl: 'https://crests.football-data.org/61.png',
   },
   'Crystal Palace': {
     name: 'Crystal Palace',
@@ -72,6 +84,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#1B458F',
     accentColor: '#C4122D',
     stadium: 'Selhurst Park',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t31.png',
+    altLogoUrl: 'https://crests.football-data.org/354.png',
   },
   'Everton': {
     name: 'Everton',
@@ -79,6 +93,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003399',
     accentColor: '#FFFFFF',
     stadium: 'Goodison Park',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t11.png',
+    altLogoUrl: 'https://crests.football-data.org/62.png',
   },
   'Fulham': {
     name: 'Fulham',
@@ -86,6 +102,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#CC0000',
     accentColor: '#FFFFFF',
     stadium: 'Craven Cottage',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t54.png',
+    altLogoUrl: 'https://crests.football-data.org/63.png',
   },
   'Ipswich': {
     name: 'Ipswich',
@@ -93,6 +111,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003399',
     accentColor: '#DA291C',
     stadium: 'Portman Road',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t40.png',
+    altLogoUrl: 'https://crests.football-data.org/349.png',
   },
   'Leeds United FC': {
     name: 'Leeds United FC',
@@ -100,6 +120,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#FFCD00',
     accentColor: '#1D428A',
     stadium: 'Elland Road',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t2.png',
+    altLogoUrl: 'https://crests.football-data.org/341.png',
   },
   'Leicester': {
     name: 'Leicester',
@@ -107,6 +129,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003090',
     accentColor: '#FDBE11',
     stadium: 'King Power Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t13.png',
+    altLogoUrl: 'https://crests.football-data.org/338.png',
   },
   'Liverpool': {
     name: 'Liverpool',
@@ -114,6 +138,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#C8102E',
     accentColor: '#00B2A9',
     stadium: 'Anfield',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t14.png',
+    altLogoUrl: 'https://crests.football-data.org/64.png',
   },
   'Man City': {
     name: 'Man City',
@@ -121,6 +147,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#6CABDD',
     accentColor: '#1C2C5B',
     stadium: 'Etihad Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t43.png',
+    altLogoUrl: 'https://crests.football-data.org/65.png',
   },
   'Man United': {
     name: 'Man United',
@@ -128,6 +156,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DA291C',
     accentColor: '#FBE122',
     stadium: 'Old Trafford',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t1.png',
+    altLogoUrl: 'https://crests.football-data.org/66.png',
   },
   'Newcastle': {
     name: 'Newcastle',
@@ -135,6 +165,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#241F20',
     accentColor: '#41B6E6',
     stadium: "St. James' Park",
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t4.png',
+    altLogoUrl: 'https://crests.football-data.org/67.png',
   },
   "Nott'm Forest": {
     name: "Nott'm Forest",
@@ -142,6 +174,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DD0000',
     accentColor: '#FFFFFF',
     stadium: 'City Ground',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t17.png',
+    altLogoUrl: 'https://crests.football-data.org/351.png',
   },
   'Southampton': {
     name: 'Southampton',
@@ -149,6 +183,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#D71920',
     accentColor: '#130C0E',
     stadium: "St Mary's Stadium",
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t20.png',
+    altLogoUrl: 'https://crests.football-data.org/340.png',
   },
   'Tottenham': {
     name: 'Tottenham',
@@ -156,6 +192,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#132257',
     accentColor: '#FFFFFF',
     stadium: 'Tottenham Hotspur Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t6.png',
+    altLogoUrl: 'https://crests.football-data.org/73.png',
   },
   'West Ham': {
     name: 'West Ham',
@@ -163,6 +201,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#7A263A',
     accentColor: '#1BB1E7',
     stadium: 'London Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t21.png',
+    altLogoUrl: 'https://crests.football-data.org/563.png',
   },
   'Wolves': {
     name: 'Wolves',
@@ -170,6 +210,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#FDB913',
     accentColor: '#231F20',
     stadium: 'Molineux Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t39.png',
+    altLogoUrl: 'https://crests.football-data.org/76.png',
   },
   'Coventry City FC': {
     name: 'Coventry City FC',
@@ -177,6 +219,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#00A3E0',
     accentColor: '#002D62',
     stadium: 'Coventry Arena',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t9.png',
+    altLogoUrl: 'https://crests.football-data.org/1076.png',
   },
   'Hull City AFC': {
     name: 'Hull City AFC',
@@ -184,6 +228,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#F68712',
     accentColor: '#000000',
     stadium: 'MKM Stadium',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t88.png',
+    altLogoUrl: 'https://crests.football-data.org/322.png',
   },
   'Sunderland AFC': {
     name: 'Sunderland AFC',
@@ -191,6 +237,8 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#EB172B',
     accentColor: '#FFFFFF',
     stadium: 'Stadium of Light',
+    logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t56.png',
+    altLogoUrl: 'https://crests.football-data.org/71.png',
   },
 };
 
@@ -201,5 +249,6 @@ export const getClubInfo = (name: string): ClubInfo => {
     primaryColor: '#38003c',
     accentColor: '#00ff85',
     stadium: 'Premier League Ground',
+    logoUrl: undefined,
   };
 };
