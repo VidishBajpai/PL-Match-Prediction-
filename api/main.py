@@ -330,14 +330,22 @@ def health_check():
     }
 
 
+CURRENT_PL_TEAMS = {
+    'Arsenal', 'Aston Villa', 'Bournemouth', 'Brentford', 'Brighton',
+    'Chelsea', 'Crystal Palace', 'Everton', 'Fulham', 'Ipswich',
+    'Leicester', 'Liverpool', 'Man City', 'Man United', 'Newcastle',
+    "Nott'm Forest", 'Southampton', 'Tottenham', 'West Ham', 'Wolves'
+}
+
+
 @app.get("/api/teams")
 def get_teams():
-    """Returns sorted list of all clubs with current Elo and baseline stats."""
-    sorted_teams = sorted(
-        LATEST_TEAM_STATS.values(),
-        key=lambda x: x['elo'],
-        reverse=True
-    )
+    """Returns sorted list of current Premier League clubs with current Elo and baseline stats."""
+    current_teams = [
+        stats for name, stats in LATEST_TEAM_STATS.items()
+        if name in CURRENT_PL_TEAMS
+    ]
+    sorted_teams = sorted(current_teams, key=lambda x: x['elo'], reverse=True)
     return {"teams": sorted_teams}
 
 
@@ -354,8 +362,11 @@ def predict_match_endpoint(req: PredictionRequest):
 
 @app.get("/api/rankings")
 def get_power_rankings():
-    """Returns clubs ranked by dynamic Elo ratings and rolling actual xGD."""
-    clubs = list(LATEST_TEAM_STATS.values())
+    """Returns current Premier League clubs ranked by dynamic Elo ratings and rolling actual xGD."""
+    clubs = [
+        c for c in LATEST_TEAM_STATS.values()
+        if c["name"] in CURRENT_PL_TEAMS
+    ]
     sorted_clubs = sorted(clubs, key=lambda x: x['elo'], reverse=True)
     return {
         "rankings": [
@@ -378,16 +389,16 @@ def get_power_rankings():
 def get_gameweek_fixtures():
     """Returns upcoming game-week fixtures with precomputed forecasts."""
     fixtures = [
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'Leeds United FC'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Sunderland AFC', 'away': 'Brighton'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'West Ham'},
+        {'date': '2026-10-10', 'matchday': 6, 'home': 'Wolves', 'away': 'Brighton'},
         {'date': '2026-10-10', 'matchday': 6, 'home': 'Chelsea', 'away': 'Bournemouth'},
         {'date': '2026-10-10', 'matchday': 6, 'home': 'Ipswich', 'away': 'Fulham'},
         {'date': '2026-10-10', 'matchday': 6, 'home': 'Aston Villa', 'away': 'Brentford'},
         {'date': '2026-10-10', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Hull City AFC', 'away': 'Everton'},
+        {'date': '2026-10-11', 'matchday': 6, 'home': 'Leicester', 'away': 'Everton'},
         {'date': '2026-10-11', 'matchday': 6, 'home': 'Crystal Palace', 'away': "Nott'm Forest"},
         {'date': '2026-10-11', 'matchday': 6, 'home': 'Liverpool', 'away': 'Man City'},
-        {'date': '2026-10-12', 'matchday': 6, 'home': 'Coventry City FC', 'away': 'Newcastle'}
+        {'date': '2026-10-12', 'matchday': 6, 'home': 'Southampton', 'away': 'Newcastle'}
     ]
 
     results = []
@@ -411,6 +422,7 @@ def get_gameweek_fixtures():
             continue
 
     return {"gameweek": 6, "fixtures": results}
+
 
 
 # ---------------------------------------------------------
