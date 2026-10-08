@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import type { PredictionResponse, TeamSnapshot } from '../types';
-import { CLUBS_DATA, getClubInfo } from '../data/clubs';
+import { getClubInfo, PREMIER_LEAGUE_CLUB_NAMES } from '../data/clubs';
 import { ProbabilityBar } from './ProbabilityBar';
 import { ScorelineGrid } from './ScorelineGrid';
 import { TaleOfTheTape } from './TaleOfTheTape';
-import { Flame, ArrowRightLeft, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
+import { ClubBadge } from './ClubBadge';
+import { Flame, ArrowRightLeft, ChevronRight, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
 
 interface MatchArenaProps {
   teams: TeamSnapshot[];
@@ -18,9 +19,13 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
+  const [showClubList, setShowClubList] = useState<boolean>(false);
+  const [selectionTarget, setSelectionTarget] = useState<'home' | 'away'>('home');
 
-  // Club names list
-  const clubNames = teams.length > 0 ? teams.map((t) => t.name) : Object.keys(CLUBS_DATA);
+  const availableTeams = new Set(teams.map((team) => team.name));
+  const clubNames = PREMIER_LEAGUE_CLUB_NAMES.filter(
+    (name) => teams.length === 0 || availableTeams.has(name),
+  );
 
   const fetchPrediction = async (h: string, a: string, rh: number, ra: number) => {
     if (h === a) {
@@ -93,15 +98,78 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
       </section>
 
       <section className="builder-card" aria-labelledby="matchup-title">
-        <form onSubmit={handlePredictSubmit}>
-          <div className="builder-topline">
-            <div>
-              <div id="matchup-title" className="builder-label">Build your matchup</div>
-              <div className="builder-caption">Choose the sides and account for recovery time.</div>
+        <div className="builder-topline">
+          <div>
+            <div id="matchup-title" className="builder-label">
+              {showClubList ? 'Premier League clubs' : 'Build your matchup'}
             </div>
-            <span className="builder-step"><strong>01</strong> / MATCH SETUP</span>
+            <div className="builder-caption">
+              {showClubList
+                ? 'Pick a side, then tap a club to add it to your matchup.'
+                : 'Choose the sides and account for recovery time.'}
+            </div>
           </div>
+          <button
+            type="button"
+            className="club-list-toggle"
+            onClick={() => setShowClubList((visible) => !visible)}
+            aria-expanded={showClubList}
+            aria-controls="club-list-panel"
+          >
+            <span>{showClubList ? 'Back to matchup' : `Browse clubs · ${clubNames.length}`}</span>
+            <ChevronRight className={showClubList ? 'is-rotated' : ''} size={16} />
+          </button>
+        </div>
 
+        {showClubList ? (
+          <div id="club-list-panel" className="club-list-panel">
+            <div className="club-list-controls" role="group" aria-label="Choose which matchup side to set">
+              <span className="club-list-prompt">Adding club to</span>
+              <button
+                type="button"
+                className={`club-side-choice ${selectionTarget === 'home' ? 'is-selected' : ''}`}
+                aria-pressed={selectionTarget === 'home'}
+                onClick={() => setSelectionTarget('home')}
+              >
+                Home
+              </button>
+              <button
+                type="button"
+                className={`club-side-choice ${selectionTarget === 'away' ? 'is-selected' : ''}`}
+                aria-pressed={selectionTarget === 'away'}
+                onClick={() => setSelectionTarget('away')}
+              >
+                Away
+              </button>
+            </div>
+            <div className="club-list-grid">
+              {clubNames.map((name) => {
+                const club = getClubInfo(name);
+                const isSelected =
+                  selectionTarget === 'home' ? homeTeam === name : awayTeam === name;
+                const isOpponent = selectionTarget === 'home' ? awayTeam === name : homeTeam === name;
+                return (
+                  <button
+                    type="button"
+                    key={name}
+                    className={`club-list-item ${isSelected ? 'is-selected' : ''}`}
+                    aria-pressed={isSelected}
+                    disabled={isOpponent}
+                    onClick={() => {
+                      if (selectionTarget === 'home') setHomeTeam(name);
+                      else setAwayTeam(name);
+                    }}
+                  >
+                    <ClubBadge club={club} size="small" />
+                    <span>{name}</span>
+                    {isSelected && <span className="club-list-side">{selectionTarget}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+        <form onSubmit={handlePredictSubmit}>
           <div className="matchup-row">
             {/* Home Club Selector */}
             <div className="club-picker home-side">
@@ -110,20 +178,20 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
                 <span className="home-advantage">+65 ELO HOME ADVANTAGE</span>
               </div>
               <div className="club-identity">
-                <span className="club-crest" aria-hidden="true">{homeClub.badgeEmoji}</span>
+                <ClubBadge club={homeClub} size="large" />
                 <div className="club-select-wrap">
-                <select
-                  value={homeTeam}
-                  onChange={(e) => setHomeTeam(e.target.value)}
-                  aria-label="Choose home club"
-                  className="club-select"
-                >
-                  {clubNames.map((name) => (
-                    <option key={`home-${name}`} value={name}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    value={homeTeam}
+                    onChange={(e) => setHomeTeam(e.target.value)}
+                    aria-label="Choose home club"
+                    className="club-select"
+                  >
+                    {clubNames.map((name) => (
+                      <option key={`home-${name}`} value={name}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
                   <div className="club-venue">{homeClub.stadium}</div>
                 </div>
               </div>
@@ -167,20 +235,20 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
                 <span className="club-side-label">AWAY SIDE</span>
               </div>
               <div className="club-identity">
-                <span className="club-crest" aria-hidden="true">{awayClub.badgeEmoji}</span>
+                <ClubBadge club={awayClub} size="large" />
                 <div className="club-select-wrap">
-                <select
-                  value={awayTeam}
-                  onChange={(e) => setAwayTeam(e.target.value)}
-                  aria-label="Choose away club"
-                  className="club-select"
-                >
-                  {clubNames.map((name) => (
-                    <option key={`away-${name}`} value={name}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    value={awayTeam}
+                    onChange={(e) => setAwayTeam(e.target.value)}
+                    aria-label="Choose away club"
+                    className="club-select"
+                  >
+                    {clubNames.map((name) => (
+                      <option key={`away-${name}`} value={name}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
                   <div className="club-venue">{awayClub.stadium}</div>
                 </div>
               </div>
@@ -226,6 +294,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
             </button>
           </div>
         </form>
+        )}
 
         {error && (
           <div className="error-notice" role="alert">
@@ -252,7 +321,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
               <div className="metric-label">Expected goals · xG</div>
               <div className="xg-scoreline">
                 <div className="xg-team">
-                  <span className="xg-team-badge">{homeClub.badgeEmoji}</span>
+                  <ClubBadge club={homeClub} size="small" />
                   <div>
                     <div className="xg-team-name">{prediction.home_team}</div>
                     <span className="xg-number">{prediction.expected_home_goals.toFixed(2)}</span>
@@ -260,7 +329,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
                 </div>
                 <span className="xg-versus">VS</span>
                 <div className="xg-team">
-                  <span className="xg-team-badge">{awayClub.badgeEmoji}</span>
+                  <ClubBadge club={awayClub} size="small" />
                   <div>
                     <div className="xg-team-name">{prediction.away_team}</div>
                     <span className="xg-number">{prediction.expected_away_goals.toFixed(2)}</span>

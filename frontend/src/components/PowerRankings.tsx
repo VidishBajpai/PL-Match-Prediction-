@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { RankingItem } from '../types';
 import { getClubInfo } from '../data/clubs';
+import { ClubBadge } from './ClubBadge';
 import { Trophy, ArrowUpDown, Search, RefreshCw } from 'lucide-react';
 
 export const PowerRankings: React.FC = () => {
@@ -141,12 +142,12 @@ export const PowerRankings: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="flex items-center space-x-2.5">
-                          <span className="text-xl">{club.badgeEmoji}</span>
+                          <ClubBadge club={club} size="small" />
                           <span className="font-extrabold text-white text-sm">{item.team}</span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <span className="font-black text-white bg-[#10081d] px-2.5 py-1 rounded-md border border-[#361e59]">
+                        <span className="ranking-elo-chip">
                           {item.elo.toFixed(1)}
                         </span>
                       </td>
@@ -170,7 +171,7 @@ export const PowerRankings: React.FC = () => {
                         {item.xg_conceded.toFixed(2)}
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <span className="bg-[#291444] text-[#00ff85] text-xs font-bold px-2 py-0.5 rounded border border-[#00ff85]/20">
+                        <span className="ranking-form-chip">
                           {item.form_pts} pts
                         </span>
                       </td>

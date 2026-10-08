@@ -1,5 +1,6 @@
 import type { TeamSnapshot } from '../types';
 import { getClubInfo } from '../data/clubs';
+import { ClubBadge } from './ClubBadge';
 import { Swords } from 'lucide-react';
 
 interface TaleOfTheTapeProps {
@@ -77,13 +78,13 @@ export const TaleOfTheTape: React.FC<TaleOfTheTapeProps> = ({ homeStats, awaySta
 
       <div className="flex justify-between items-center px-4 py-2.5 bg-[#120a1f] rounded-xl border border-[#2e1948] mb-3 text-xs font-bold text-white">
         <div className="flex items-center space-x-1.5">
-          <span>{homeClub.badgeEmoji}</span>
+          <ClubBadge club={homeClub} size="small" />
           <span>{homeClub.name}</span>
         </div>
         <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Metrics</span>
         <div className="flex items-center space-x-1.5">
           <span>{awayClub.name}</span>
-          <span>{awayClub.badgeEmoji}</span>
+          <ClubBadge club={awayClub} size="small" />
         </div>
       </div>
 

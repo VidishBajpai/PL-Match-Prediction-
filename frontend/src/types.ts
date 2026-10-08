@@ -68,5 +68,4 @@ export interface ClubInfo {
   primaryColor: string;
   accentColor: string;
   stadium: string;
-  badgeEmoji: string;
 }

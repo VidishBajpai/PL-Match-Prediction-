@@ -1,5 +1,28 @@
 import type { ClubInfo } from '../types';
 
+export const PREMIER_LEAGUE_CLUB_NAMES = [
+  'Arsenal',
+  'Aston Villa',
+  'Bournemouth',
+  'Brentford',
+  'Brighton',
+  'Chelsea',
+  'Coventry City FC',
+  'Crystal Palace',
+  'Everton',
+  'Fulham',
+  'Hull City AFC',
+  'Ipswich',
+  'Leeds United FC',
+  'Liverpool',
+  'Man City',
+  'Man United',
+  'Newcastle',
+  "Nott'm Forest",
+  'Sunderland AFC',
+  'Tottenham',
+] as const;
+
 export const CLUBS_DATA: Record<string, ClubInfo> = {
   'Arsenal': {
     name: 'Arsenal',
@@ -7,7 +30,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#EF0107',
     accentColor: '#063672',
     stadium: 'Emirates Stadium',
-    badgeEmoji: '🔴',
   },
   'Aston Villa': {
     name: 'Aston Villa',
@@ -15,7 +37,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#670E36',
     accentColor: '#95BFE5',
     stadium: 'Villa Park',
-    badgeEmoji: '🦁',
   },
   'Bournemouth': {
     name: 'Bournemouth',
@@ -23,7 +44,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DA291C',
     accentColor: '#111111',
     stadium: 'Vitality Stadium',
-    badgeEmoji: '🍒',
   },
   'Brentford': {
     name: 'Brentford',
@@ -31,7 +51,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#E30613',
     accentColor: '#F9A01B',
     stadium: 'Gtech Community Stadium',
-    badgeEmoji: '🐝',
   },
   'Brighton': {
     name: 'Brighton',
@@ -39,7 +58,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#0057B8',
     accentColor: '#FFCD00',
     stadium: 'Amex Stadium',
-    badgeEmoji: '🌊',
   },
   'Chelsea': {
     name: 'Chelsea',
@@ -47,7 +65,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#034694',
     accentColor: '#EE242C',
     stadium: 'Stamford Bridge',
-    badgeEmoji: '🦁',
   },
   'Crystal Palace': {
     name: 'Crystal Palace',
@@ -55,7 +72,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#1B458F',
     accentColor: '#C4122D',
     stadium: 'Selhurst Park',
-    badgeEmoji: '🦅',
   },
   'Everton': {
     name: 'Everton',
@@ -63,7 +79,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003399',
     accentColor: '#FFFFFF',
     stadium: 'Goodison Park',
-    badgeEmoji: '🍬',
   },
   'Fulham': {
     name: 'Fulham',
@@ -71,7 +86,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#CC0000',
     accentColor: '#FFFFFF',
     stadium: 'Craven Cottage',
-    badgeEmoji: '⚪',
   },
   'Ipswich': {
     name: 'Ipswich',
@@ -79,7 +93,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003399',
     accentColor: '#DA291C',
     stadium: 'Portman Road',
-    badgeEmoji: '🚜',
   },
   'Leeds United FC': {
     name: 'Leeds United FC',
@@ -87,7 +100,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#FFCD00',
     accentColor: '#1D428A',
     stadium: 'Elland Road',
-    badgeEmoji: '⚪',
   },
   'Leicester': {
     name: 'Leicester',
@@ -95,7 +107,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#003090',
     accentColor: '#FDBE11',
     stadium: 'King Power Stadium',
-    badgeEmoji: '🦊',
   },
   'Liverpool': {
     name: 'Liverpool',
@@ -103,7 +114,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#C8102E',
     accentColor: '#00B2A9',
     stadium: 'Anfield',
-    badgeEmoji: '🔴',
   },
   'Man City': {
     name: 'Man City',
@@ -111,7 +121,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#6CABDD',
     accentColor: '#1C2C5B',
     stadium: 'Etihad Stadium',
-    badgeEmoji: '👑',
   },
   'Man United': {
     name: 'Man United',
@@ -119,7 +128,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DA291C',
     accentColor: '#FBE122',
     stadium: 'Old Trafford',
-    badgeEmoji: '👹',
   },
   'Newcastle': {
     name: 'Newcastle',
@@ -127,7 +135,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#241F20',
     accentColor: '#41B6E6',
     stadium: "St. James' Park",
-    badgeEmoji: '⬛',
   },
   "Nott'm Forest": {
     name: "Nott'm Forest",
@@ -135,7 +142,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#DD0000',
     accentColor: '#FFFFFF',
     stadium: 'City Ground',
-    badgeEmoji: '🌳',
   },
   'Southampton': {
     name: 'Southampton',
@@ -143,7 +149,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#D71920',
     accentColor: '#130C0E',
     stadium: "St Mary's Stadium",
-    badgeEmoji: '😇',
   },
   'Tottenham': {
     name: 'Tottenham',
@@ -151,7 +156,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#132257',
     accentColor: '#FFFFFF',
     stadium: 'Tottenham Hotspur Stadium',
-    badgeEmoji: '🐓',
   },
   'West Ham': {
     name: 'West Ham',
@@ -159,7 +163,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#7A263A',
     accentColor: '#1BB1E7',
     stadium: 'London Stadium',
-    badgeEmoji: '⚒️',
   },
   'Wolves': {
     name: 'Wolves',
@@ -167,7 +170,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#FDB913',
     accentColor: '#231F20',
     stadium: 'Molineux Stadium',
-    badgeEmoji: '🐺',
   },
   'Coventry City FC': {
     name: 'Coventry City FC',
@@ -175,7 +177,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#00A3E0',
     accentColor: '#002D62',
     stadium: 'Coventry Arena',
-    badgeEmoji: '🐘',
   },
   'Hull City AFC': {
     name: 'Hull City AFC',
@@ -183,7 +184,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#F68712',
     accentColor: '#000000',
     stadium: 'MKM Stadium',
-    badgeEmoji: '🐯',
   },
   'Sunderland AFC': {
     name: 'Sunderland AFC',
@@ -191,7 +191,6 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     primaryColor: '#EB172B',
     accentColor: '#FFFFFF',
     stadium: 'Stadium of Light',
-    badgeEmoji: '🔴',
   },
 };
 
@@ -202,6 +201,5 @@ export const getClubInfo = (name: string): ClubInfo => {
     primaryColor: '#38003c',
     accentColor: '#00ff85',
     stadium: 'Premier League Ground',
-    badgeEmoji: '⚽',
   };
 };

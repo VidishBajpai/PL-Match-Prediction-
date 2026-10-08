@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { GameWeekMatch } from '../types';
 import { getClubInfo } from '../data/clubs';
+import { ClubBadge } from './ClubBadge';
 import { Calendar, AlertTriangle, RefreshCw } from 'lucide-react';
 
 export const GameWeekHub: React.FC = () => {
@@ -97,7 +98,7 @@ export const GameWeekHub: React.FC = () => {
                   <div className="flex items-center justify-between py-2">
                     {/* Home Club */}
                     <div className="flex items-center space-x-2.5">
-                      <span className="text-2xl">{homeClub.badgeEmoji}</span>
+                      <ClubBadge club={homeClub} size="medium" />
                       <div>
                         <span className="font-black text-white text-base block">{m.home_team}</span>
                         <span className="text-[11px] text-slate-400">{homeClub.shortName}</span>
@@ -105,11 +106,11 @@ export const GameWeekHub: React.FC = () => {
                     </div>
 
                     {/* xG Expectation */}
-                    <div className="text-center px-3 py-1 rounded-lg bg-[#11091d] border border-[#301b4d]">
-                      <span className="text-xs font-black text-white">
+                    <div className="fixture-xg-score">
+                      <span className="fixture-xg-numbers">
                         {m.expected_home_goals.toFixed(2)} - {m.expected_away_goals.toFixed(2)}
                       </span>
-                      <span className="block text-[9px] uppercase tracking-wider text-slate-400">
+                      <span className="fixture-xg-label">
                         xG Score
                       </span>
                     </div>
@@ -120,13 +121,13 @@ export const GameWeekHub: React.FC = () => {
                         <span className="font-black text-white text-base block">{m.away_team}</span>
                         <span className="text-[11px] text-slate-400">{awayClub.shortName}</span>
                       </div>
-                      <span className="text-2xl">{awayClub.badgeEmoji}</span>
+                      <ClubBadge club={awayClub} size="medium" />
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom Probability Strip & Scoreline */}
-                <div className="mt-4 pt-3 border-t border-[#2a1744] space-y-2">
+                <div className="fixture-card-footer mt-4 pt-3 space-y-2">
                   {/* Probability Bar */}
                   <div className="h-2 w-full rounded-full overflow-hidden flex bg-[#11091d]">
                     <div style={{ width: `${homeP}%` }} className="bg-[#EF0107]" />

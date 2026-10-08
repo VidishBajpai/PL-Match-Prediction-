@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { MatchArena } from './components/MatchArena';
 import { GameWeekHub } from './components/GameWeekHub';
 import { PowerRankings } from './components/PowerRankings';
+import { Activity } from 'lucide-react';
 import './App.css';
 
 export const App = () => {
@@ -35,7 +36,7 @@ export const App = () => {
       <main className="app-main flex-1">
         {initialLoading ? (
           <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-slate-400">
-            <span className="brand-mark text-2xl" aria-hidden="true">⚽</span>
+            <span className="brand-mark" aria-hidden="true"><Activity size={20} /></span>
             <span className="font-semibold text-sm animate-pulse text-[#00ff85]">
               Warming up the prediction engine…
             </span>
