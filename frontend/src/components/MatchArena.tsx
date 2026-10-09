@@ -22,8 +22,8 @@ interface MatchArenaProps {
 }
 
 export const MatchArena: React.FC<MatchArenaProps> = () => {
-  const [homeTeam, setHomeTeam] = useState<string>('Arsenal');
-  const [awayTeam, setAwayTeam] = useState<string>('Chelsea');
+  const [homeTeam, setHomeTeam] = useState<string>('Liverpool');
+  const [awayTeam, setAwayTeam] = useState<string>('Man United');
   const [restHome, setRestHome] = useState<number>(7);
   const [restAway, setRestAway] = useState<number>(7);
   const [loading, setLoading] = useState<boolean>(false);
@@ -198,49 +198,43 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               ref={homePickerRef}
               className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(255, 255, 255, 0.98), ${homeClub.primaryColor}12)`,
+                background: `linear-gradient(145deg, rgba(248, 250, 252, 0.98), ${homeClub.primaryColor}12)`,
                 borderColor: `${homeClub.primaryColor}44`,
               }}
             >
               <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-[#00ff85]/15 text-[#00ff85] border border-[#00ff85]/30">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
                   HOME SIDE
                 </span>
-                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">
-                  +65 Elo Home Advantage
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="hidden sm:inline text-[10px] font-bold text-slate-600">+50 Elo Home Advantage</span>
+                  <button
+                    type="button"
+                    onClick={() => setOpenPicker(openPicker === 'home' ? null : 'home')}
+                    className={`p-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
+                      openPicker === 'home'
+                        ? 'bg-[#00ff85] text-slate-950 border-[#00ff85]'
+                        : 'bg-white/90 hover:bg-white text-[#087f5b] border-slate-300 hover:border-[#087f5b]/50'
+                    }`}
+                    aria-expanded={openPicker === 'home'}
+                    aria-label={`Choose home club, currently ${homeTeam}`}
+                    title="Choose home club"
+                  >
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openPicker === 'home' ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
               </div>
 
-              {/* Team Identity + Toggle Button Right Next To Card */}
-              <div className="flex items-center min-w-0 gap-1.5">
-                <ClubBadge club={homeClub} size="small" showGlow={true} />
-                  <div className="min-w-0">
-                    <span className="text-xs sm:text-lg font-black text-white block truncate">
-                      {homeTeam}
-                    </span>
-                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                      <span className="truncate">{homeClub.stadium}</span>
-                    </div>
-                  </div>
-                <button
-                  type="button"
-                  onClick={() => setOpenPicker(openPicker === 'home' ? null : 'home')}
-                  className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
-                    openPicker === 'home'
-                      ? 'bg-[#00ff85] text-slate-950 border-[#00ff85]'
-                      : 'bg-slate-800 hover:bg-slate-700 text-[#00ff85] border-slate-700 hover:border-[#00ff85]/50'
-                  }`}
-                  aria-expanded={openPicker === 'home'}
-                  aria-label={`Choose home club, currently ${homeTeam}`}
-                  title="Choose home club"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      openPicker === 'home' ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
+              {/* Centered team identity; picker stays in the outer corner */}
+              <div className="flex min-h-[148px] flex-col items-center justify-center gap-3 text-center">
+                <ClubBadge club={homeClub} size="medium" showGlow={true} />
+                <div className="min-w-0 max-w-full">
+                  <span className="block text-xs sm:text-base font-black text-slate-900 truncate">{homeTeam}</span>
+                </div>
+                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-600 max-w-full">
+                  <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+                  <span className="truncate">{homeClub.stadium}</span>
+                </div>
               </div>
 
               {/* Home 20 Premier League Teams Dropdown Grid */}
@@ -292,8 +286,8 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               )}
 
               {/* Home Rest Days Pill Control */}
-              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-800/80 flex flex-col items-center gap-2 text-xs">
-                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-300 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-600 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
                   <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
                 <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
@@ -305,7 +299,7 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
                       className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restHome === days
                           ? 'bg-[#00ff85] text-slate-950 shadow'
-                          : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                          : 'bg-white/80 text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-300'
                       }`}
                     >
                       {days}d
@@ -335,49 +329,43 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               ref={awayPickerRef}
               className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(255, 255, 255, 0.98), ${awayClub.primaryColor}12)`,
+                background: `linear-gradient(145deg, rgba(248, 250, 252, 0.98), ${awayClub.primaryColor}12)`,
                 borderColor: `${awayClub.primaryColor}44`,
               }}
             >
               <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-cyan-100 text-cyan-800 border border-cyan-200">
                   AWAY SIDE
                 </span>
-                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">
-                  Travelling Side
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="hidden sm:inline text-[10px] font-bold text-slate-600">Travelling Side</span>
+                  <button
+                    type="button"
+                    onClick={() => setOpenPicker(openPicker === 'away' ? null : 'away')}
+                    className={`p-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
+                      openPicker === 'away'
+                        ? 'bg-cyan-400 text-slate-950 border-cyan-400 shadow-cyan-400/20'
+                        : 'bg-white/90 hover:bg-white text-cyan-700 border-slate-300 hover:border-cyan-700/50'
+                    }`}
+                    aria-expanded={openPicker === 'away'}
+                    aria-label={`Choose away club, currently ${awayTeam}`}
+                    title="Choose away club"
+                  >
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${openPicker === 'away' ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
               </div>
 
-              {/* Team Identity + Toggle Button Right Next To Card */}
-              <div className="flex items-center min-w-0 gap-1.5">
-                <ClubBadge club={awayClub} size="small" showGlow={true} />
-                  <div className="min-w-0">
-                    <span className="text-xs sm:text-lg font-black text-white block truncate">
-                      {awayTeam}
-                    </span>
-                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                      <span className="truncate">{awayClub.stadium}</span>
-                    </div>
-                  </div>
-                <button
-                  type="button"
-                  onClick={() => setOpenPicker(openPicker === 'away' ? null : 'away')}
-                  className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
-                    openPicker === 'away'
-                      ? 'bg-cyan-400 text-slate-950 border-cyan-400 shadow-cyan-400/20'
-                      : 'bg-slate-800 hover:bg-slate-700 text-cyan-400 border-slate-700 hover:border-cyan-400/50'
-                  }`}
-                  aria-expanded={openPicker === 'away'}
-                  aria-label={`Choose away club, currently ${awayTeam}`}
-                  title="Choose away club"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      openPicker === 'away' ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
+              {/* Centered team identity; picker stays in the outer corner */}
+              <div className="flex min-h-[148px] flex-col items-center justify-center gap-3 text-center">
+                <ClubBadge club={awayClub} size="medium" showGlow={true} />
+                <div className="min-w-0 max-w-full">
+                  <span className="block text-xs sm:text-base font-black text-slate-900 truncate">{awayTeam}</span>
+                </div>
+                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-600 max-w-full">
+                  <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+                  <span className="truncate">{awayClub.stadium}</span>
+                </div>
               </div>
 
               {/* Away 20 Premier League Teams Dropdown Grid */}
@@ -429,8 +417,8 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               )}
 
               {/* Away Rest Days Pill Control */}
-              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-800/80 flex flex-col items-center gap-2 text-xs">
-                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-300 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-600 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
                   <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
                 <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
@@ -442,7 +430,7 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
                       className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restAway === days
                           ? 'bg-cyan-400 text-slate-950 shadow'
-                          : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                          : 'bg-white/80 text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-300'
                       }`}
                     >
                       {days}d
