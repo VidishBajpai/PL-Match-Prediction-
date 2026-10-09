@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import type { GameWeekMatch } from '../types';
-import { getClubInfo, PREMIER_LEAGUE_CLUB_NAMES } from '../data/clubs';
+import { getClubInfo } from '../data/clubs';
 import { ClubBadge } from './ClubBadge';
 import { Calendar, RefreshCw, Sparkles, ShieldCheck } from 'lucide-react';
 
 // Default authentic 10-match Premier League Game-Week 6 schedule (all 20 current PL teams)
-const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
+export const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
   {
     date: '2026-10-10',
     matchday: 6,
@@ -139,18 +139,9 @@ const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
 ];
 
 export const GameWeekHub: React.FC = () => {
-  const [fixtures, setFixtures] = useState<GameWeekMatch[]>(AUTHENTIC_PL_GAMEWEEK_FIXTURES);
-  const [gameweek, setGameweek] = useState<number>(6);
+  const [fixtures, setFixtures] = useState<GameWeekMatch[]>([]);
+  const [gameweek, setGameweek] = useState<number | string>('—');
   const [loading, setLoading] = useState<boolean>(false);
-
-  const isPLTeam = (teamName: string) => {
-    if (!teamName) return false;
-    const clean = teamName.replace(/\s+FC$/i, '').replace(/\s+AFC$/i, '').trim();
-    return (
-      PREMIER_LEAGUE_CLUB_NAMES.includes(clean as any) ||
-      PREMIER_LEAGUE_CLUB_NAMES.includes(teamName as any)
-    );
-  };
 
   const fetchGameWeek = async () => {
     setLoading(true);
@@ -162,22 +153,11 @@ export const GameWeekHub: React.FC = () => {
       if (res.ok) {
         const data = await res.json();
         const incoming: GameWeekMatch[] = data.fixtures || [];
-        // Strictly filter to games where BOTH teams are current Premier League clubs
-        const filtered = incoming.filter(
-          (m) => isPLTeam(m.home_team) && isPLTeam(m.away_team),
-        );
-
-        if (filtered.length > 0) {
-          setFixtures(filtered);
-          setGameweek(data.gameweek || 6);
-        } else {
-          // If the backend has non-PL teams, fallback to authentic PL fixtures
-          setFixtures(AUTHENTIC_PL_GAMEWEEK_FIXTURES);
-        }
+        setFixtures(incoming);
+        setGameweek(data.gameweek ?? '—');
       }
-    } catch (err: any) {
-      console.warn('Using authentic Premier League fixtures schedule:', err);
-      setFixtures(AUTHENTIC_PL_GAMEWEEK_FIXTURES);
+    } catch (err: unknown) {
+      console.warn('Could not refresh Premier League fixtures:', err);
     } finally {
       setLoading(false);
     }
@@ -185,6 +165,15 @@ export const GameWeekHub: React.FC = () => {
 
   useEffect(() => {
     fetchGameWeek();
+    const refreshTimer = window.setInterval(fetchGameWeek, 15 * 60 * 1000);
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') fetchGameWeek();
+    };
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+    return () => {
+      window.clearInterval(refreshTimer);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
   }, []);
 
   return (
@@ -231,8 +220,10 @@ export const GameWeekHub: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {fixtures.map((m) => {
-            const homeClub = getClubInfo(m.home_team);
-            const awayClub = getClubInfo(m.away_team);
+            const homeClubInfo = getClubInfo(m.home_team);
+            const awayClubInfo = getClubInfo(m.away_team);
+            const homeClub = { ...homeClubInfo, logoUrl: m.home_crest || homeClubInfo.logoUrl };
+            const awayClub = { ...awayClubInfo, logoUrl: m.away_crest || awayClubInfo.logoUrl };
 
             const homeP = Math.round(m.home_win_prob * 100);
             const drawP = Math.round(m.draw_prob * 100);

@@ -221,14 +221,17 @@ def startup_event():
 # Prediction Core Logic
 # ---------------------------------------------------------
 def run_prediction(home_team: str, away_team: str, rest_home: int = 7, rest_away: int = 7) -> Dict[str, Any]:
-    if home_team not in LATEST_TEAM_STATS or away_team not in LATEST_TEAM_STATS:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Team not found in database. Available clubs: {list(LATEST_TEAM_STATS.keys())}"
-        )
-
-    h = LATEST_TEAM_STATS[home_team]
-    a = LATEST_TEAM_STATS[away_team]
+    # Newly promoted clubs may not have historical PL rows yet. Give them a
+    # neutral prior so every verified PL fixture can still be forecast.
+    neutral_stats = {
+        'name': '', 'elo': 1500.0, 'long_xgd': 0.0, 'long_xg': 1.35,
+        'long_xga': 1.35, 'long_gd': 0.0, 'long_net_st': 0.0,
+        'long_ppg': 1.35, 'short_xgd': 0.0, 'short_form_5': 7.0,
+        'short_gd': 0.0, 'short_net_st': 0.0,
+        'venue_home_ppg': 1.5, 'venue_away_ppg': 1.2,
+    }
+    h = {**neutral_stats, **LATEST_TEAM_STATS.get(home_team, {}), 'name': home_team}
+    a = {**neutral_stats, **LATEST_TEAM_STATS.get(away_team, {}), 'name': away_team}
 
     feat_dict = {
         'Home_Elo': h['elo'],
@@ -405,7 +408,7 @@ def get_gameweek_fixtures():
         response = requests.get(
             API_BASE_URL,
             headers=API_HEADERS,
-            params={"season": API_SEASON, "status": "SCHEDULED,TIMED"},
+            params={"season": API_SEASON},
             timeout=10,
         )
         response.raise_for_status()
@@ -415,8 +418,7 @@ def get_gameweek_fixtures():
 
     fixtures = []
     for match in matches:
-        # The endpoint is scoped to PL, and this extra check protects against
-        # unexpected cross-competition data from an upstream response.
+        # The endpoint is scoped to PL; verify the competition in the payload too.
         if match.get("competition", {}).get("code") != "PL":
             continue
         fixtures.append({
@@ -424,12 +426,16 @@ def get_gameweek_fixtures():
             "matchday": match.get("matchday", "N/A"),
             "home": NAME_MAP.get(match.get("homeTeam", {}).get("name"), match.get("homeTeam", {}).get("name")),
             "away": NAME_MAP.get(match.get("awayTeam", {}).get("name"), match.get("awayTeam", {}).get("name")),
+            "home_crest": match.get("homeTeam", {}).get("crest"),
+            "away_crest": match.get("awayTeam", {}).get("crest"),
         })
 
     fixtures.sort(key=lambda fixture: fixture["date"])
     upcoming_matchdays = [
-        fixture["matchday"] for fixture in fixtures
-        if isinstance(fixture["matchday"], int)
+        match.get("matchday") for match in matches
+        if match.get("status") in {"SCHEDULED", "TIMED"}
+        and isinstance(match.get("matchday"), int)
+        and match.get("competition", {}).get("code") == "PL"
     ]
     if upcoming_matchdays:
         next_matchday = min(upcoming_matchdays)
@@ -437,13 +443,14 @@ def get_gameweek_fixtures():
 
     results = []
     for f in fixtures:
-        try:
-            pred = run_prediction(f['home'], f['away'])
-            results.append({
+        pred = run_prediction(f['home'], f['away'])
+        results.append({
                 'date': f['date'],
                 'matchday': f['matchday'],
                 'home_team': f['home'],
                 'away_team': f['away'],
+                'home_crest': f['home_crest'],
+                'away_crest': f['away_crest'],
                 'verdict': pred['verdict'],
                 'home_win_prob': pred['home_win_prob'],
                 'draw_prob': pred['draw_prob'],
@@ -451,9 +458,7 @@ def get_gameweek_fixtures():
                 'expected_home_goals': pred['expected_home_goals'],
                 'expected_away_goals': pred['expected_away_goals'],
                 'top_scores': ", ".join([f"{s['score']} ({s['prob']}%)" for s in pred['top_scores'][:3]])
-            })
-        except Exception:
-            continue
+        })
 
     gameweek = results[0]["matchday"] if results else None
     return JSONResponse(

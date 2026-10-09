@@ -1,26 +1,26 @@
 import type { ClubInfo } from '../types';
 
 export const PREMIER_LEAGUE_CLUB_NAMES = [
+  'AFC Bournemouth',
   'Arsenal',
   'Aston Villa',
-  'Bournemouth',
   'Brentford',
   'Brighton',
   'Chelsea',
+  'Coventry City',
   'Crystal Palace',
   'Everton',
   'Fulham',
-  'Ipswich',
-  'Leicester',
+  'Hull City',
+  'Ipswich Town',
+  'Leeds United',
   'Liverpool',
   'Man City',
   'Man United',
   'Newcastle',
   "Nott'm Forest",
-  'Southampton',
+  'Sunderland',
   'Tottenham',
-  'West Ham',
-  'Wolves',
 ] as const;
 
 export const CLUBS_DATA: Record<string, ClubInfo> = {
@@ -51,6 +51,11 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t91.png',
     altLogoUrl: 'https://crests.football-data.org/1044.png',
   },
+  'AFC Bournemouth': {
+    name: 'AFC Bournemouth', shortName: 'BOU', primaryColor: '#DA291C', accentColor: '#111111',
+    stadium: 'Vitality Stadium', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t91.png',
+    altLogoUrl: 'https://crests.football-data.org/1044.png',
+  },
   'Brentford': {
     name: 'Brentford',
     shortName: 'BRE',
@@ -77,6 +82,11 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     stadium: 'Stamford Bridge',
     logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t8.png',
     altLogoUrl: 'https://crests.football-data.org/61.png',
+  },
+  'Coventry City': {
+    name: 'Coventry City', shortName: 'COV', primaryColor: '#62A8E5', accentColor: '#FFFFFF',
+    stadium: 'Coventry Building Society Arena', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t9.png',
+    altLogoUrl: 'https://crests.football-data.org/1076.png',
   },
   'Crystal Palace': {
     name: 'Crystal Palace',
@@ -105,6 +115,11 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t54.png',
     altLogoUrl: 'https://crests.football-data.org/63.png',
   },
+  'Hull City': {
+    name: 'Hull City', shortName: 'HUL', primaryColor: '#F5A623', accentColor: '#111111',
+    stadium: 'MKM Stadium', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t88.png',
+    altLogoUrl: 'https://crests.football-data.org/322.png',
+  },
   'Ipswich': {
     name: 'Ipswich',
     shortName: 'IPS',
@@ -113,6 +128,16 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     stadium: 'Portman Road',
     logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t40.png',
     altLogoUrl: 'https://crests.football-data.org/349.png',
+  },
+  'Ipswich Town': {
+    name: 'Ipswich Town', shortName: 'IPS', primaryColor: '#003399', accentColor: '#DA291C',
+    stadium: 'Portman Road', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t40.png',
+    altLogoUrl: 'https://crests.football-data.org/349.png',
+  },
+  'Leeds United': {
+    name: 'Leeds United', shortName: 'LEE', primaryColor: '#FFCD00', accentColor: '#1D428A',
+    stadium: 'Elland Road', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t2.png',
+    altLogoUrl: 'https://crests.football-data.org/341.png',
   },
   'Leicester': {
     name: 'Leicester',
@@ -177,6 +202,11 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
     logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t20.png',
     altLogoUrl: 'https://crests.football-data.org/340.png',
   },
+  'Sunderland': {
+    name: 'Sunderland', shortName: 'SUN', primaryColor: '#EB172B', accentColor: '#FFFFFF',
+    stadium: 'Stadium of Light', logoUrl: 'https://resources.premierleague.com/premierleague/badges/70/t29.png',
+    altLogoUrl: 'https://crests.football-data.org/71.png',
+  },
   'Tottenham': {
     name: 'Tottenham',
     shortName: 'TOT',
@@ -207,7 +237,21 @@ export const CLUBS_DATA: Record<string, ClubInfo> = {
 };
 
 export const getClubInfo = (name: string): ClubInfo => {
-  return CLUBS_DATA[name] || {
+  const aliases: Record<string, string> = {
+    'Bournemouth': 'AFC Bournemouth',
+    'Ipswich': 'Ipswich Town',
+    'Leeds': 'Leeds United',
+    'Hull': 'Hull City',
+    'Coventry': 'Coventry City',
+    'Brighton & Hove Albion': 'Brighton',
+    'Manchester City': 'Man City',
+    'Manchester United': 'Man United',
+    'Newcastle United': 'Newcastle',
+    'Nottingham Forest': "Nott'm Forest",
+    'Tottenham Hotspur': 'Tottenham',
+  };
+  const normalizedName = name.replace(/\s+(FC|AFC)$/i, '').trim();
+  return CLUBS_DATA[name] || CLUBS_DATA[normalizedName] || CLUBS_DATA[aliases[name]] || CLUBS_DATA[aliases[normalizedName]] || {
     name,
     shortName: name.slice(0, 3).toUpperCase(),
     primaryColor: '#38003c',

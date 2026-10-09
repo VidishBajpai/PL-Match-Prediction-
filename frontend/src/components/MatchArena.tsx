@@ -21,7 +21,7 @@ interface MatchArenaProps {
   teams: TeamSnapshot[];
 }
 
-export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
+export const MatchArena: React.FC<MatchArenaProps> = () => {
   const [homeTeam, setHomeTeam] = useState<string>('Arsenal');
   const [awayTeam, setAwayTeam] = useState<string>('Chelsea');
   const [restHome, setRestHome] = useState<number>(7);
@@ -61,10 +61,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
   }, [openPicker]);
 
   // Strict list of the 20 clubs in the current Premier League season
-  const availableTeams = new Set(teams.map((team) => team.name));
-  const clubNames = PREMIER_LEAGUE_CLUB_NAMES.filter(
-    (name) => teams.length === 0 || availableTeams.has(name) || true,
-  );
+  const clubNames = [...PREMIER_LEAGUE_CLUB_NAMES];
 
   const fetchPrediction = async (h: string, a: string, rh: number, ra: number) => {
     if (h === a) {
@@ -178,7 +175,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
       </section>
 
       {/* Matchup Builder Card */}
-      <section className="relative overflow-visible rounded-3xl bg-slate-900/85 border border-slate-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+      <section className={`relative overflow-visible rounded-3xl bg-slate-900/85 border border-slate-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl ${openPicker ? 'z-[60]' : 'z-0'}`}>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00ff85] via-cyan-400 to-[#38003c]" />
 
         {/* Builder Top Info */}
@@ -195,54 +192,51 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
 
         {/* Duel Faceoff Form */}
         <form onSubmit={handlePredictSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto,1fr] gap-4 items-center">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 sm:gap-4 items-stretch">
             {/* Home Team Card */}
             <div
               ref={homePickerRef}
-              className="relative p-6 rounded-3xl border transition-all duration-300"
+              className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(15, 23, 42, 0.95), ${homeClub.primaryColor}18)`,
-                borderColor: `${homeClub.primaryColor}55`,
+                background: `linear-gradient(145deg, rgba(255, 255, 255, 0.98), ${homeClub.primaryColor}12)`,
+                borderColor: `${homeClub.primaryColor}44`,
               }}
             >
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#00ff85]/15 text-[#00ff85] border border-[#00ff85]/30">
+              <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-[#00ff85]/15 text-[#00ff85] border border-[#00ff85]/30">
                   HOME SIDE
                 </span>
-                <span className="text-[10px] font-bold text-slate-400">
+                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">
                   +65 Elo Home Advantage
                 </span>
               </div>
 
               {/* Team Identity + Toggle Button Right Next To Card */}
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <ClubBadge club={homeClub} size="large" showGlow={true} />
+              <div className="flex items-center min-w-0 gap-1.5">
+                <ClubBadge club={homeClub} size="small" showGlow={true} />
                   <div className="min-w-0">
-                    <span className="text-xl sm:text-2xl font-black text-white block truncate">
+                    <span className="text-xs sm:text-lg font-black text-white block truncate">
                       {homeTeam}
                     </span>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
+                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
                       <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                       <span className="truncate">{homeClub.stadium}</span>
                     </div>
                   </div>
-                </div>
-
-                {/* Toggle Button Right Next To Team Card */}
                 <button
                   type="button"
                   onClick={() => setOpenPicker(openPicker === 'home' ? null : 'home')}
-                  className={`px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 shrink-0 border shadow-lg ${
+                  className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
                     openPicker === 'home'
-                      ? 'bg-[#00ff85] text-slate-950 border-[#00ff85] shadow-[#00ff85]/20'
+                      ? 'bg-[#00ff85] text-slate-950 border-[#00ff85]'
                       : 'bg-slate-800 hover:bg-slate-700 text-[#00ff85] border-slate-700 hover:border-[#00ff85]/50'
                   }`}
                   aria-expanded={openPicker === 'home'}
+                  aria-label={`Choose home club, currently ${homeTeam}`}
+                  title="Choose home club"
                 >
-                  <span>Select Club</span>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    className={`w-4 h-4 transition-transform duration-200 ${
                       openPicker === 'home' ? 'rotate-180' : ''
                     }`}
                   />
@@ -251,7 +245,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
 
               {/* Home 20 Premier League Teams Dropdown Grid */}
               {openPicker === 'home' && (
-                <div className="absolute left-0 right-0 top-full mt-2 z-50 p-4 rounded-3xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-2xl animate-in fade-in duration-200">
+                <div className="absolute left-0 top-14 z-50 w-[min(520px,calc(100vw-32px))] p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-2xl animate-in fade-in duration-200">
                   <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
                     <span className="text-xs font-black uppercase tracking-wider text-[#00ff85]">
                       Choose Home Club ({clubNames.length} Teams)
@@ -261,7 +255,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-72 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[min(65vh,360px)] overflow-y-auto pr-1">
                     {clubNames.map((name) => {
                       const club = getClubInfo(name);
                       const isSelected = homeTeam === name;
@@ -298,18 +292,17 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
               )}
 
               {/* Home Rest Days Pill Control */}
-              <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-semibold flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  Recovery Window:
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-800/80 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+                  <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
-                <div className="flex items-center gap-1">
+                <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
                   {[3, 5, 7, 10, 14].map((days) => (
                     <button
                       key={`h-rest-${days}`}
                       type="button"
                       onClick={() => setRestHome(days)}
-                      className={`px-2.5 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
+                      className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restHome === days
                           ? 'bg-[#00ff85] text-slate-950 shadow'
                           : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
@@ -323,16 +316,16 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
             </div>
 
             {/* Swap Sides Button */}
-            <div className="flex flex-col items-center justify-center py-2 lg:py-0">
+            <div className="flex flex-col items-center justify-center">
               <button
                 type="button"
                 onClick={handleSwap}
                 title="Swap Home and Away Clubs"
-                className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-[#00ff85] border border-slate-700 hover:border-[#00ff85]/50 shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer group"
+                className="p-2 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800 hover:bg-slate-700 text-[#00ff85] border border-slate-700 hover:border-[#00ff85]/50 shadow-xl transition-all duration-300 hover:scale-110 cursor-pointer group"
               >
                 <ArrowRightLeft className="w-5 h-5 transition-transform duration-300 group-hover:rotate-180" />
               </button>
-              <span className="text-[10px] font-black tracking-widest text-slate-500 uppercase mt-2">
+              <span className="text-[8px] sm:text-[10px] font-black tracking-widest text-slate-500 uppercase mt-1.5">
                 VS
               </span>
             </div>
@@ -340,50 +333,47 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
             {/* Away Team Card */}
             <div
               ref={awayPickerRef}
-              className="relative p-6 rounded-3xl border transition-all duration-300"
+              className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(15, 23, 42, 0.95), ${awayClub.primaryColor}18)`,
-                borderColor: `${awayClub.primaryColor}55`,
+                background: `linear-gradient(145deg, rgba(255, 255, 255, 0.98), ${awayClub.primaryColor}12)`,
+                borderColor: `${awayClub.primaryColor}44`,
               }}
             >
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
+              <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
                   AWAY SIDE
                 </span>
-                <span className="text-[10px] font-bold text-slate-400">
+                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">
                   Travelling Side
                 </span>
               </div>
 
               {/* Team Identity + Toggle Button Right Next To Card */}
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <ClubBadge club={awayClub} size="large" showGlow={true} />
+              <div className="flex items-center min-w-0 gap-1.5">
+                <ClubBadge club={awayClub} size="small" showGlow={true} />
                   <div className="min-w-0">
-                    <span className="text-xl sm:text-2xl font-black text-white block truncate">
+                    <span className="text-xs sm:text-lg font-black text-white block truncate">
                       {awayTeam}
                     </span>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
+                    <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
                       <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                       <span className="truncate">{awayClub.stadium}</span>
                     </div>
                   </div>
-                </div>
-
-                {/* Toggle Button Right Next To Team Card */}
                 <button
                   type="button"
                   onClick={() => setOpenPicker(openPicker === 'away' ? null : 'away')}
-                  className={`px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 shrink-0 border shadow-lg ${
+                  className={`p-1.5 rounded-lg text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
                     openPicker === 'away'
                       ? 'bg-cyan-400 text-slate-950 border-cyan-400 shadow-cyan-400/20'
                       : 'bg-slate-800 hover:bg-slate-700 text-cyan-400 border-slate-700 hover:border-cyan-400/50'
                   }`}
                   aria-expanded={openPicker === 'away'}
+                  aria-label={`Choose away club, currently ${awayTeam}`}
+                  title="Choose away club"
                 >
-                  <span>Select Club</span>
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    className={`w-4 h-4 transition-transform duration-200 ${
                       openPicker === 'away' ? 'rotate-180' : ''
                     }`}
                   />
@@ -392,7 +382,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
 
               {/* Away 20 Premier League Teams Dropdown Grid */}
               {openPicker === 'away' && (
-                <div className="absolute left-0 right-0 top-full mt-2 z-50 p-4 rounded-3xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-2xl animate-in fade-in duration-200">
+                <div className="absolute right-0 top-14 z-50 w-[min(520px,calc(100vw-32px))] p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-2xl animate-in fade-in duration-200">
                   <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
                     <span className="text-xs font-black uppercase tracking-wider text-cyan-400">
                       Choose Away Club ({clubNames.length} Teams)
@@ -402,7 +392,7 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-72 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-[min(65vh,360px)] overflow-y-auto pr-1">
                     {clubNames.map((name) => {
                       const club = getClubInfo(name);
                       const isSelected = awayTeam === name;
@@ -439,18 +429,17 @@ export const MatchArena: React.FC<MatchArenaProps> = ({ teams }) => {
               )}
 
               {/* Away Rest Days Pill Control */}
-              <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-semibold flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  Recovery Window:
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-800/80 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+                  <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
-                <div className="flex items-center gap-1">
+                <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
                   {[3, 5, 7, 10, 14].map((days) => (
                     <button
                       key={`a-rest-${days}`}
                       type="button"
                       onClick={() => setRestAway(days)}
-                      className={`px-2.5 py-1 rounded-lg font-black text-xs transition-all cursor-pointer ${
+                      className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restAway === days
                           ? 'bg-cyan-400 text-slate-950 shadow'
                           : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'

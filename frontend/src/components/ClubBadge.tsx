@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ClubInfo } from '../types';
 
 interface ClubBadgeProps {
@@ -27,11 +27,14 @@ export const ClubBadge: React.FC<ClubBadgeProps> = ({
 
   const currentSize = sizeMap[size];
 
+  useEffect(() => {
+    setImgErrorStage(0);
+  }, [club.name, club.logoUrl, club.altLogoUrl]);
+
   // Try primary logo (stage 0), then alternate logo (stage 1), then fallback to colors (stage 2)
-  const currentSrc =
-    imgErrorStage === 0
-      ? club.logoUrl
-      : imgErrorStage === 1
+  const currentSrc = imgErrorStage === 0
+    ? club.logoUrl || club.altLogoUrl
+    : imgErrorStage === 1 && club.logoUrl
       ? club.altLogoUrl
       : null;
 

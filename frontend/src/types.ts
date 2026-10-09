@@ -42,6 +42,8 @@ export interface GameWeekMatch {
   matchday: number | string;
   home_team: string;
   away_team: string;
+  home_crest?: string;
+  away_crest?: string;
   verdict: string;
   home_win_prob: number;
   draw_prob: number;
@@ -71,4 +73,3 @@ export interface ClubInfo {
   logoUrl?: string;
   altLogoUrl?: string;
 }
-
