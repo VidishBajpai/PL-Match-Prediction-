@@ -12,19 +12,18 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
 }) => {
   const iconDimensions = {
-    sm: { width: 32, height: 32 },
-    md: { width: 40, height: 40 },
-    lg: { width: 56, height: 56 },
+    sm: { width: 36, height: 36 },
+    md: { width: 44, height: 44 },
+    lg: { width: 60, height: 60 },
   }[size];
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Precision Vector Emblem */}
       <div
         className="relative flex items-center justify-center shrink-0 rounded-2xl p-1 shadow-lg transition-transform duration-300 hover:scale-105"
         style={{
-          background: 'linear-gradient(135deg, #202a3e 0%, #111827 100%)',
-          border: '1px solid rgba(215, 243, 106, .35)',
+          background: 'linear-gradient(145deg, #202a3e 0%, #101827 100%)',
+          border: '1px solid rgba(215, 243, 106, .38)',
           boxShadow: '0 8px 24px rgba(0, 0, 0, .35), inset 0 1px 1px rgba(255, 255, 255, .08)',
         }}
       >
@@ -34,85 +33,27 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="filter drop-shadow-[0_2px_8px_rgba(215,243,106,0.3)]"
+          role="img"
+          aria-label="90+ football analytics logo"
         >
           <defs>
-            {/* Citron and ice-blue identity gradient */}
-            <linearGradient id="plMintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#d7f36a" />
-              <stop offset="60%" stopColor="#a9e77b" />
-              <stop offset="100%" stopColor="#75d8ee" />
+            <linearGradient id="ninetyPlusGradient" x1="5" y1="5" x2="58" y2="59" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#D7F36A" />
+              <stop offset="1" stopColor="#75D8EE" />
             </linearGradient>
-
-            {/* Stadium Shield Gradient */}
-            <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#273449" stopOpacity="1" />
-              <stop offset="100%" stopColor="#111827" stopOpacity="1" />
-            </linearGradient>
-
-            {/* Subtle glow filter */}
-            <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="2" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
           </defs>
-
-          {/* Shield Outer Contour */}
-          <path
-            d="M32 4L54 13V33C54 46.5 44.5 56.5 32 60C19.5 56.5 10 46.5 10 33V13L32 4Z"
-            fill="url(#shieldGrad)"
-            stroke="url(#plMintGrad)"
-            strokeWidth="1.8"
-          />
-
-          {/* Inner Geometric Predictive Grid Arcs */}
-          <path
-            d="M20 22C24 18 40 18 44 22M16 32C22 28 42 28 48 32M20 42C24 46 40 46 44 42"
-            stroke="rgba(215, 243, 106, 0.22)"
-            strokeWidth="1.2"
-            strokeDasharray="2 2"
-          />
-
-          {/* Stylized Modern Lion Crown Motif */}
-          <path
-            d="M23 20L27 27L32 17L37 27L41 20L43 30H21L23 20Z"
-            fill="url(#plMintGrad)"
-          />
-
-          {/* Central AI Analytics Diamond Core / Ball Node */}
-          <circle cx="32" cy="38" r="4.5" fill="#d7f36a" filter="url(#neonGlow)" />
-          <circle cx="32" cy="38" r="2" fill="#ffffff" />
-
-          {/* Prediction Pulse Rings */}
-          <circle
-            cx="32"
-            cy="38"
-            r="8.5"
-            stroke="#75d8ee"
-            strokeWidth="1"
-            strokeOpacity="0.55"
-            strokeDasharray="3 3"
-          />
-
-          {/* Dynamic Velocity Sparks */}
-          <circle cx="21" cy="34" r="1.2" fill="#75d8ee" opacity="0.9" />
-          <circle cx="43" cy="34" r="1.2" fill="#75d8ee" opacity="0.9" />
+          <path d="M32 4L55 13V33C55 46 45 56 32 60C19 56 9 46 9 33V13L32 4Z" fill="#101827" stroke="url(#ninetyPlusGradient)" strokeWidth="2" />
+          <path d="M19 21H45M16 32H48M19 43H45" stroke="#D7F36A" strokeOpacity=".18" strokeWidth="1" />
+          <text x="31" y="37" textAnchor="middle" fill="url(#ninetyPlusGradient)" fontFamily="Arial, sans-serif" fontSize="19" fontWeight="900" letterSpacing="-1.5">90+</text>
+          <path d="M22 46H42" stroke="#75D8EE" strokeWidth="1.5" strokeLinecap="round" opacity=".8" />
         </svg>
       </div>
 
-      {/* Brand Typography */}
       {showText && (
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5 leading-none">
-            <span className="text-lg font-black tracking-[-0.04em] text-white">
-              PREMIER<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff85] to-[#00f5d4]">AI</span>
-            </span>
-            <span className="rounded-md border border-[#00ff85]/30 bg-[#00ff85]/10 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-[#00ff85]">
-              PRO
-            </span>
-          </div>
-          <span className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mt-0.5">
-            xG Match Predictor
+          <span className="text-lg font-black tracking-[-0.04em] leading-none text-white">90<span className="text-[#d7f36a]">+</span></span>
+          <span className="text-[10px] font-semibold tracking-wide text-slate-400 mt-1">
+            Where matchday meets match data
           </span>
         </div>
       )}

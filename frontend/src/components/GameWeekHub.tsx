@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { GameWeekMatch } from '../types';
 import { getClubInfo } from '../data/clubs';
 import { ClubBadge } from './ClubBadge';
-import { Calendar, RefreshCw, Sparkles, ShieldCheck } from 'lucide-react';
+import { Calendar, RefreshCw, ShieldCheck } from 'lucide-react';
 
 // Default authentic 10-match Premier League Game-Week 6 schedule (all 20 current PL teams)
 export const AUTHENTIC_PL_GAMEWEEK_FIXTURES: GameWeekMatch[] = [
@@ -235,15 +235,12 @@ export const GameWeekHub: React.FC = () => {
                 className="relative overflow-hidden bg-slate-900/85 p-5 sm:p-6 rounded-3xl border border-slate-800/90 hover:border-slate-700 transition-all shadow-xl flex flex-col justify-between group"
               >
                 <div>
-                  {/* Top Bar: Kickoff & Consensus Chip */}
+                  {/* Kickoff date */}
                   <div className="flex items-center justify-between text-xs mb-4">
                     <span className="font-semibold text-slate-400 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
                       {m.date}
                     </span>
-                    <span className="inline-flex items-center gap-1 font-black text-[#00ff85] bg-[#00ff85]/10 border border-[#00ff85]/25 px-2.5 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
-                      <Sparkles className="w-3 h-3" />
-                      {m.verdict}
-                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Premier League</span>
                   </div>
 
                   {/* Clubs Duel Header - Home & Away perfectly aligned on the same level with a nice VS in between */}

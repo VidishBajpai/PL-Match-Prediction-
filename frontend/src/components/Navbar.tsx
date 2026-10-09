@@ -21,7 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => (
         type="button"
         className="flex items-center text-left focus:outline-none group cursor-pointer"
         onClick={() => setActiveTab('arena')}
-        aria-label="PremierAI home"
+        aria-label="90+ home"
       >
         <BrandLogo size="md" showText={true} />
       </button>
