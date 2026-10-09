@@ -23,9 +23,9 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <div
         className="relative flex items-center justify-center shrink-0 rounded-2xl p-1 shadow-lg transition-transform duration-300 hover:scale-105"
         style={{
-          background: 'linear-gradient(135deg, #e8f5ec 0%, #f7fbf8 100%)',
-          border: '1px solid #cfe4d4',
-          boxShadow: '0 5px 15px rgba(22, 118, 76, 0.11), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+          background: 'linear-gradient(135deg, #202a3e 0%, #111827 100%)',
+          border: '1px solid rgba(215, 243, 106, .35)',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, .35), inset 0 1px 1px rgba(255, 255, 255, .08)',
         }}
       >
         <svg
@@ -34,20 +34,20 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           viewBox="0 0 64 64"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="filter drop-shadow-[0_2px_8px_rgba(0,255,133,0.3)]"
+          className="filter drop-shadow-[0_2px_8px_rgba(215,243,106,0.3)]"
         >
           <defs>
-            {/* Premier Electric Mint Gradient */}
+            {/* Citron and ice-blue identity gradient */}
             <linearGradient id="plMintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#16764c" />
-              <stop offset="60%" stopColor="#37a47b" />
-              <stop offset="100%" stopColor="#80b99a" />
+              <stop offset="0%" stopColor="#d7f36a" />
+              <stop offset="60%" stopColor="#a9e77b" />
+              <stop offset="100%" stopColor="#75d8ee" />
             </linearGradient>
 
             {/* Stadium Shield Gradient */}
             <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f2f8f3" stopOpacity="1" />
-              <stop offset="100%" stopColor="#dceee1" stopOpacity="1" />
+              <stop offset="0%" stopColor="#273449" stopOpacity="1" />
+              <stop offset="100%" stopColor="#111827" stopOpacity="1" />
             </linearGradient>
 
             {/* Subtle glow filter */}
@@ -68,7 +68,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           {/* Inner Geometric Predictive Grid Arcs */}
           <path
             d="M20 22C24 18 40 18 44 22M16 32C22 28 42 28 48 32M20 42C24 46 40 46 44 42"
-            stroke="rgba(22, 118, 76, 0.2)"
+            stroke="rgba(215, 243, 106, 0.22)"
             strokeWidth="1.2"
             strokeDasharray="2 2"
           />
@@ -80,7 +80,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           />
 
           {/* Central AI Analytics Diamond Core / Ball Node */}
-          <circle cx="32" cy="38" r="4.5" fill="#16764c" filter="url(#neonGlow)" />
+          <circle cx="32" cy="38" r="4.5" fill="#d7f36a" filter="url(#neonGlow)" />
           <circle cx="32" cy="38" r="2" fill="#ffffff" />
 
           {/* Prediction Pulse Rings */}
@@ -88,15 +88,15 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             cx="32"
             cy="38"
             r="8.5"
-            stroke="#16764c"
+            stroke="#75d8ee"
             strokeWidth="1"
-            strokeOpacity="0.4"
+            strokeOpacity="0.55"
             strokeDasharray="3 3"
           />
 
           {/* Dynamic Velocity Sparks */}
-          <circle cx="21" cy="34" r="1.2" fill="#37a47b" opacity="0.8" />
-          <circle cx="43" cy="34" r="1.2" fill="#37a47b" opacity="0.8" />
+          <circle cx="21" cy="34" r="1.2" fill="#75d8ee" opacity="0.9" />
+          <circle cx="43" cy="34" r="1.2" fill="#75d8ee" opacity="0.9" />
         </svg>
       </div>
 

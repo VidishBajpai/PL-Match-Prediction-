@@ -138,11 +138,6 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
     setOpenPicker(null);
   };
 
-  const handlePredictSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchPrediction(homeTeam, awayTeam, restHome, restAway);
-  };
-
   const homeClub = getClubInfo(homeTeam);
   const awayClub = getClubInfo(awayTeam);
 
@@ -191,30 +186,30 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
         </div>
 
         {/* Duel Faceoff Form */}
-        <form onSubmit={handlePredictSubmit} className="space-y-6">
+        <div className="space-y-6">
           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 sm:gap-4 items-stretch">
             {/* Home Team Card */}
             <div
               ref={homePickerRef}
               className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(248, 250, 252, 0.98), ${homeClub.primaryColor}12)`,
+                background: `linear-gradient(145deg, rgba(19, 27, 43, 0.98), ${homeClub.primaryColor}20)`,
                 borderColor: `${homeClub.primaryColor}44`,
               }}
             >
               <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-[#00ff85]/10 text-[#00ff85] border border-[#00ff85]/30">
                   HOME SIDE
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline text-[10px] font-bold text-slate-600">+50 Elo Home Advantage</span>
+                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">+50 Elo Home Advantage</span>
                   <button
                     type="button"
                     onClick={() => setOpenPicker(openPicker === 'home' ? null : 'home')}
                     className={`p-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
                       openPicker === 'home'
                         ? 'bg-[#00ff85] text-slate-950 border-[#00ff85]'
-                        : 'bg-white/90 hover:bg-white text-[#087f5b] border-slate-300 hover:border-[#087f5b]/50'
+                        : 'bg-slate-800 hover:bg-slate-700 text-[#00ff85] border-slate-700 hover:border-[#00ff85]/50'
                     }`}
                     aria-expanded={openPicker === 'home'}
                     aria-label={`Choose home club, currently ${homeTeam}`}
@@ -229,9 +224,9 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               <div className="flex min-h-[148px] flex-col items-center justify-center gap-3 text-center">
                 <ClubBadge club={homeClub} size="medium" showGlow={true} />
                 <div className="min-w-0 max-w-full">
-                  <span className="block text-xs sm:text-base font-black text-slate-900 truncate">{homeTeam}</span>
+                  <span className="block text-xs sm:text-base font-black text-white truncate">{homeTeam}</span>
                 </div>
-                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-600 max-w-full">
+                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-400 max-w-full">
                   <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
                   <span className="truncate">{homeClub.stadium}</span>
                 </div>
@@ -286,8 +281,8 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               )}
 
               {/* Home Rest Days Pill Control */}
-              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-300 flex flex-col items-center gap-2 text-xs">
-                <span className="text-slate-600 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-700/80 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
                   <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
                 <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
@@ -295,11 +290,14 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
                     <button
                       key={`h-rest-${days}`}
                       type="button"
-                      onClick={() => setRestHome(days)}
+                      onClick={() => {
+                        setRestHome(days);
+                        fetchPrediction(homeTeam, awayTeam, days, restAway);
+                      }}
                       className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restHome === days
                           ? 'bg-[#00ff85] text-slate-950 shadow'
-                          : 'bg-white/80 text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-300'
+                          : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700'
                       }`}
                     >
                       {days}d
@@ -329,23 +327,23 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               ref={awayPickerRef}
               className="relative min-w-0 p-2.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-300"
               style={{
-                background: `linear-gradient(145deg, rgba(248, 250, 252, 0.98), ${awayClub.primaryColor}12)`,
+                background: `linear-gradient(145deg, rgba(19, 27, 43, 0.98), ${awayClub.primaryColor}20)`,
                 borderColor: `${awayClub.primaryColor}44`,
               }}
             >
               <div className="flex items-center justify-between gap-1 mb-3 sm:mb-4">
-                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-cyan-100 text-cyan-800 border border-cyan-200">
+                <span className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider bg-cyan-400/10 text-cyan-300 border border-cyan-400/30">
                   AWAY SIDE
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline text-[10px] font-bold text-slate-600">Travelling Side</span>
+                <span className="hidden sm:inline text-[10px] font-bold text-slate-400">Travelling Side</span>
                   <button
                     type="button"
                     onClick={() => setOpenPicker(openPicker === 'away' ? null : 'away')}
                     className={`p-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center shrink-0 border ${
                       openPicker === 'away'
                         ? 'bg-cyan-400 text-slate-950 border-cyan-400 shadow-cyan-400/20'
-                        : 'bg-white/90 hover:bg-white text-cyan-700 border-slate-300 hover:border-cyan-700/50'
+                        : 'bg-slate-800 hover:bg-slate-700 text-cyan-300 border-slate-700 hover:border-cyan-400/50'
                     }`}
                     aria-expanded={openPicker === 'away'}
                     aria-label={`Choose away club, currently ${awayTeam}`}
@@ -360,9 +358,9 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               <div className="flex min-h-[148px] flex-col items-center justify-center gap-3 text-center">
                 <ClubBadge club={awayClub} size="medium" showGlow={true} />
                 <div className="min-w-0 max-w-full">
-                  <span className="block text-xs sm:text-base font-black text-slate-900 truncate">{awayTeam}</span>
+                  <span className="block text-xs sm:text-base font-black text-white truncate">{awayTeam}</span>
                 </div>
-                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-600 max-w-full">
+                <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-400 max-w-full">
                   <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
                   <span className="truncate">{awayClub.stadium}</span>
                 </div>
@@ -417,8 +415,8 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               )}
 
               {/* Away Rest Days Pill Control */}
-              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-300 flex flex-col items-center gap-2 text-xs">
-                <span className="text-slate-600 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
+              <div className="mt-3 sm:mt-5 pt-3 sm:pt-4 border-t border-slate-700/80 flex flex-col items-center gap-2 text-xs">
+                <span className="text-slate-400 font-semibold flex items-center gap-1 text-[10px] sm:text-xs">
                   <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Recovery
                 </span>
                 <div className="flex w-full items-center justify-between gap-0.5 sm:justify-center sm:gap-1">
@@ -426,11 +424,14 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
                     <button
                       key={`a-rest-${days}`}
                       type="button"
-                      onClick={() => setRestAway(days)}
+                      onClick={() => {
+                        setRestAway(days);
+                        fetchPrediction(homeTeam, awayTeam, restHome, days);
+                      }}
                       className={`px-1.5 sm:px-2.5 py-1 rounded-lg font-black text-[10px] sm:text-xs transition-all cursor-pointer ${
                         restAway === days
                           ? 'bg-cyan-400 text-slate-950 shadow'
-                          : 'bg-white/80 text-slate-600 hover:text-slate-900 hover:bg-white border border-slate-300'
+                          : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700'
                       }`}
                     >
                       {days}d
@@ -441,30 +442,17 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
             </div>
           </div>
 
-          {/* Run Prediction Action */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
             <span className="text-xs text-slate-400">
-              Only authentic 2026/27 Premier League teams. Dynamic Elo ratings and actual xG.
+              Predictions refresh automatically when teams or recovery days change.
             </span>
-            <button
-              type="submit"
-              disabled={loading}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#00ff85] to-[#00d2ff] hover:opacity-90 text-slate-950 font-black text-sm tracking-wide shadow-xl shadow-[#00ff85]/20 transition-all duration-200 cursor-pointer disabled:opacity-50"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Running Simulation…</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Run Match Simulation</span>
-                </>
-              )}
-            </button>
+            {loading && (
+              <span className="inline-flex items-center gap-2 text-xs font-bold text-[#00ff85]" role="status">
+                <RefreshCw className="w-4 h-4 animate-spin" /> Updating prediction…
+              </span>
+            )}
           </div>
-        </form>
+        </div>
 
         {error && (
           <div className="mt-4 p-4 rounded-2xl bg-red-950/60 border border-red-800/80 text-red-200 flex items-center gap-3 text-xs font-semibold">
