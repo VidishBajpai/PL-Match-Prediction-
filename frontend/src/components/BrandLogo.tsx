@@ -12,48 +12,42 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
 }) => {
   const iconDimensions = {
-    sm: { width: 36, height: 36 },
-    md: { width: 44, height: 44 },
-    lg: { width: 60, height: 60 },
+    sm: { width: 48, height: 40 },
+    md: { width: 58, height: 44 },
+    lg: { width: 72, height: 54 },
   }[size];
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      <div
-        className="relative flex items-center justify-center shrink-0 rounded-2xl p-1 shadow-lg transition-transform duration-300 hover:scale-105"
-        style={{
-          background: 'linear-gradient(145deg, #202a3e 0%, #101827 100%)',
-          border: '1px solid rgba(215, 243, 106, .38)',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, .35), inset 0 1px 1px rgba(255, 255, 255, .08)',
-        }}
+      <svg
+        width={iconDimensions.width}
+        height={iconDimensions.height}
+        viewBox="0 0 80 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="90+ football substitution board logo"
       >
-        <svg
-          width={iconDimensions.width}
-          height={iconDimensions.height}
-          viewBox="0 0 64 64"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          role="img"
-          aria-label="90+ football analytics logo"
-        >
-          <defs>
-            <linearGradient id="ninetyPlusGradient" x1="5" y1="5" x2="58" y2="59" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#D7F36A" />
-              <stop offset="1" stopColor="#75D8EE" />
-            </linearGradient>
-          </defs>
-          <path d="M32 4L55 13V33C55 46 45 56 32 60C19 56 9 46 9 33V13L32 4Z" fill="#101827" stroke="url(#ninetyPlusGradient)" strokeWidth="2" />
-          <path d="M19 21H45M16 32H48M19 43H45" stroke="#D7F36A" strokeOpacity=".18" strokeWidth="1" />
-          <text x="31" y="37" textAnchor="middle" fill="url(#ninetyPlusGradient)" fontFamily="Arial, sans-serif" fontSize="19" fontWeight="900" letterSpacing="-1.5">90+</text>
-          <path d="M22 46H42" stroke="#75D8EE" strokeWidth="1.5" strokeLinecap="round" opacity=".8" />
-        </svg>
-      </div>
+        <defs>
+          <filter id="subBoardGlow" x="-30%" y="-40%" width="160%" height="180%">
+            <feGaussianBlur stdDeviation="1.5" result="glow" />
+            <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <path d="M33 12V8C33 5.8 34.8 4 37 4H43C45.2 4 47 5.8 47 8V12" stroke="#DDE7F3" strokeWidth="2.2" strokeLinecap="round" />
+        <rect y="12" width="80" height="37" rx="5" fill="#273548" stroke="#8B9AAF" strokeWidth="1.5" />
+        <path d="M5 16H75" stroke="#C4D0DF" strokeOpacity=".65" strokeWidth="1" />
+        <rect x="4" y="18" width="72" height="27" rx="2.5" fill="#071018" stroke="#101923" strokeWidth="1" />
+        <text x="48" y="36" textAnchor="end" fill="#FF3547" filter="url(#subBoardGlow)" fontFamily="monospace" fontSize="22" fontWeight="900" letterSpacing="-2.2">90</text>
+        <text x="49" y="36" textAnchor="start" fill="#28F28B" filter="url(#subBoardGlow)" fontFamily="monospace" fontSize="22" fontWeight="900">+</text>
+        <path d="M29 49V54M51 49V54" stroke="#A8B4C6" strokeOpacity=".7" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
 
       {showText && (
         <div className="flex flex-col">
-          <span className="text-lg font-black tracking-[-0.04em] leading-none text-white">90<span className="text-[#d7f36a]">+</span></span>
-          <span className="text-[10px] font-semibold tracking-wide text-slate-400 mt-1">
-            Where matchday meets match data
+          <span className="text-lg font-black tracking-[-0.04em] leading-none text-white">Ninety<span className="text-[#d7f36a]">+</span></span>
+          <span className="text-[10px] font-semibold tracking-wide text-slate-300 mt-1">
+            Where Matchday Meets Data
           </span>
         </div>
       )}

@@ -60,7 +60,7 @@ export const App = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 text-slate-300 font-bold">
             <span className="flex items-center gap-1.5 text-white">
               <span className="w-2 h-2 rounded-full bg-[#00ff85]" />
-              90+ Match Intelligence
+              Ninety+ Match Intelligence
             </span>
             <span className="text-slate-600" aria-hidden="true">·</span>
             <span className="text-slate-400">2026/27 Campaign</span>

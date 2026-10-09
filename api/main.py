@@ -209,6 +209,27 @@ def load_production_models():
                     'venue_away_ppg': round(float(row.get('Away_Venue_PPG_8', 1.2)), 2)
                 }
 
+        # The rolling feature in each match row is intentionally calculated
+        # before that match kicks off, so it excludes the team's latest result.
+        # Power Rankings needs form through the latest completed match instead.
+        completed = df.copy()
+        completed['FTHG'] = pd.to_numeric(completed['FTHG'], errors='coerce')
+        completed['FTAG'] = pd.to_numeric(completed['FTAG'], errors='coerce')
+        completed = completed.dropna(subset=['FTHG', 'FTAG'])
+        completed = completed[completed['FTR'].isin(['H', 'D', 'A'])].sort_values(
+            ['Date', 'Match_ID'], kind='stable'
+        )
+        recent_points: Dict[str, List[int]] = {}
+        for match in completed.itertuples(index=False):
+            home_points = 3 if match.FTHG > match.FTAG else 1 if match.FTHG == match.FTAG else 0
+            away_points = 3 if match.FTAG > match.FTHG else 1 if match.FTHG == match.FTAG else 0
+            recent_points.setdefault(match.HomeTeam, []).append(home_points)
+            recent_points.setdefault(match.AwayTeam, []).append(away_points)
+
+        for team, stats in LATEST_TEAM_STATS.items():
+            # Explicitly use results rather than the pre-match model feature.
+            stats['short_form_5'] = float(sum(recent_points.get(team, [])[-5:]))
+
     print(f"Loaded {len(LATEST_TEAM_STATS)} clubs into memory.")
 
 
@@ -368,7 +389,7 @@ def current_team_stats(team: str) -> Dict[str, Any]:
         'long_net_st': 0.0,
         'long_ppg': 1.35,
         'short_xgd': 0.0,
-        'short_form_5': 7.0,
+        'short_form_5': 0.0,
         'short_gd': 0.0,
         'short_net_st': 0.0,
         'venue_home_ppg': 1.5,
@@ -401,7 +422,7 @@ def predict_match_endpoint(req: PredictionRequest):
 
 @app.get("/api/rankings")
 def get_power_rankings():
-    """Returns current Premier League clubs ranked by dynamic Elo ratings and rolling actual xGD."""
+    """Return current PL clubs with Elo, xGD, and points from their last five completed league matches."""
     clubs = [current_team_stats(name) for name in CURRENT_PL_TEAMS]
     sorted_clubs = sorted(clubs, key=lambda x: x['elo'], reverse=True)
     return JSONResponse(

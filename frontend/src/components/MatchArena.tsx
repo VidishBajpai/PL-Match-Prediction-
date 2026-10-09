@@ -151,7 +151,7 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
             <span>2026/27 Premier League Campaign</span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none">
-            Every fixture has <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff85] via-[#00f5d4] to-cyan-400">a story.</span>
+            Every fixture has <span className="text-[#d7f36a] drop-shadow-[0_0_18px_rgba(215,243,106,0.22)]">a story.</span>
           </h1>
           <p className="mt-3 text-slate-400 text-sm sm:text-base max-w-2xl leading-relaxed">
             Put any two of the 20 current Premier League sides head to head. Toggle teams, test recovery windows, and simulate underlying match dynamics.
