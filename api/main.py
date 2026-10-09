@@ -14,6 +14,7 @@ Provides REST endpoints for:
 import os
 import sys
 import pickle
+import requests
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
@@ -33,7 +34,13 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 # Import Dixon-Coles model class for unpickling
-from scripts.weekly_pipeline import ActualXGDixonColes
+from scripts.weekly_pipeline import (
+    ActualXGDixonColes,
+    API_BASE_URL,
+    API_HEADERS,
+    API_SEASON,
+    NAME_MAP,
+)
 
 app = FastAPI(
     title="Premier League Match Prediction API",
@@ -393,19 +400,40 @@ def get_power_rankings():
 
 @app.get("/api/gameweek")
 def get_gameweek_fixtures():
-    """Returns upcoming game-week fixtures with precomputed forecasts."""
-    fixtures = [
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Chelsea', 'away': 'Bournemouth'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Ipswich', 'away': 'Fulham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Aston Villa', 'away': 'Brentford'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Arsenal', 'away': 'West Ham'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Newcastle', 'away': 'Wolves'},
-        {'date': '2026-10-10', 'matchday': 6, 'home': 'Man United', 'away': 'Tottenham'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Everton', 'away': 'Leicester'},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Crystal Palace', 'away': "Nott'm Forest"},
-        {'date': '2026-10-11', 'matchday': 6, 'home': 'Liverpool', 'away': 'Man City'},
-        {'date': '2026-10-12', 'matchday': 6, 'home': 'Brighton', 'away': 'Southampton'}
+    """Return upcoming Premier League fixtures from football-data.org."""
+    try:
+        response = requests.get(
+            API_BASE_URL,
+            headers=API_HEADERS,
+            params={"season": API_SEASON, "status": "SCHEDULED,TIMED"},
+            timeout=10,
+        )
+        response.raise_for_status()
+        matches = response.json().get("matches", [])
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=502, detail="Could not load Premier League fixtures") from exc
+
+    fixtures = []
+    for match in matches:
+        # The endpoint is scoped to PL, and this extra check protects against
+        # unexpected cross-competition data from an upstream response.
+        if match.get("competition", {}).get("code") != "PL":
+            continue
+        fixtures.append({
+            "date": match.get("utcDate", "")[:10],
+            "matchday": match.get("matchday", "N/A"),
+            "home": NAME_MAP.get(match.get("homeTeam", {}).get("name"), match.get("homeTeam", {}).get("name")),
+            "away": NAME_MAP.get(match.get("awayTeam", {}).get("name"), match.get("awayTeam", {}).get("name")),
+        })
+
+    fixtures.sort(key=lambda fixture: fixture["date"])
+    upcoming_matchdays = [
+        fixture["matchday"] for fixture in fixtures
+        if isinstance(fixture["matchday"], int)
     ]
+    if upcoming_matchdays:
+        next_matchday = min(upcoming_matchdays)
+        fixtures = [f for f in fixtures if f["matchday"] == next_matchday]
 
     results = []
     for f in fixtures:
@@ -427,8 +455,9 @@ def get_gameweek_fixtures():
         except Exception:
             continue
 
+    gameweek = results[0]["matchday"] if results else None
     return JSONResponse(
-        content={"gameweek": 6, "fixtures": results},
+        content={"gameweek": gameweek, "fixtures": results},
         headers={"Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"}
     )
 
