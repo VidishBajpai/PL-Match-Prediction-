@@ -193,11 +193,9 @@ export const TaleOfTheTape: React.FC<TaleOfTheTapeProps> = ({ homeStats, awaySta
               {/* Dual Comparative Progress Bar */}
               <div className="grid grid-cols-2 gap-2 h-1.5 w-full">
                 {/* Home bar (aligns right to center) */}
-                <div className="w-full bg-slate-800/80 rounded-full overflow-hidden flex justify-end">
+                <div className="w-full flex justify-end">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isHomeAdv ? 'bg-[#00ff85]' : 'bg-slate-600'
-                    }`}
+                    className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.max(
                         10,
@@ -206,16 +204,15 @@ export const TaleOfTheTape: React.FC<TaleOfTheTapeProps> = ({ homeStats, awaySta
                           ((m.homeVal - m.min) / (m.max - m.min)) * 100
                         )
                       )}%`,
+                      backgroundColor: homeClub.primaryColor,
                     }}
                   />
                 </div>
 
                 {/* Away bar (aligns left to center) */}
-                <div className="w-full bg-slate-800/80 rounded-full overflow-hidden flex justify-start">
+                <div className="w-full flex justify-start">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isAwayAdv ? 'bg-cyan-400' : 'bg-slate-600'
-                    }`}
+                    className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.max(
                         10,
@@ -224,6 +221,7 @@ export const TaleOfTheTape: React.FC<TaleOfTheTapeProps> = ({ homeStats, awaySta
                           ((m.awayVal - m.min) / (m.max - m.min)) * 100
                         )
                       )}%`,
+                      backgroundColor: awayClub.primaryColor,
                     }}
                   />
                 </div>
