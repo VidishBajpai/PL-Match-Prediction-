@@ -489,9 +489,18 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
       {/* Main Results Showcase */}
       {prediction && (
         <section className="space-y-6 animate-in fade-in duration-500" aria-label="Match Prediction Results">
-          {/* Expected Goals Duel Centerpiece */}
-          <div className="rounded-3xl bg-slate-900/85 border border-slate-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+          {/* Tri-Hybrid Outcome Probabilities */}
+          <ProbabilityBar
+            homeTeam={prediction.home_team}
+            awayTeam={prediction.away_team}
+            homeWinP={prediction.home_win_prob}
+            drawP={prediction.draw_prob}
+            awayWinP={prediction.away_win_prob}
+          />
+
+          {/* Expected Goals Duel, placed below the outcome probabilities */}
+          <div className="rounded-3xl bg-slate-900/85 border border-slate-800 p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
                 <h3 className="text-base font-black uppercase tracking-wider text-white">
                   Expected Goals (xG) Forecast Duel
@@ -506,87 +515,39 @@ export const MatchArena: React.FC<MatchArenaProps> = () => {
               </div>
             </div>
 
-            {/* Scoreboard Graphic */}
-            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-6 items-center p-6 rounded-2xl bg-slate-950/80 border border-slate-800">
-              {/* Home Team xG */}
-              <div className="flex items-center gap-4">
-                <ClubBadge club={homeClub} size="large" showGlow={true} />
-                <div>
-                  <span className="text-base sm:text-lg font-black text-white block">
-                    {prediction.home_team}
-                  </span>
-                  <span className="text-[11px] text-slate-400 font-bold block mb-1">
-                    Expected Goals (λH)
-                  </span>
-                  <div className="text-3xl sm:text-4xl font-black text-[#00ff85] tracking-tight">
-                    {prediction.expected_home_goals.toFixed(2)}
-                  </div>
-                </div>
+            <div className="grid grid-cols-2 p-3 sm:p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+              <div className="flex min-h-[148px] flex-col items-center justify-center text-center px-2 sm:px-6 py-3">
+                <ClubBadge club={homeClub} size="medium" showGlow={true} className="mb-3" />
+                <span className="w-full text-xs sm:text-base font-black text-white leading-tight min-h-5">{prediction.home_team}</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2">Home xG</span>
+                <div className="text-2xl sm:text-3xl leading-none font-black text-[#00ff85] tracking-tight mt-1">{prediction.expected_home_goals.toFixed(2)}</div>
               </div>
 
-              {/* Total Match xG Center Meter */}
-              <div className="flex flex-col items-center justify-center text-center px-6 py-2 border-y md:border-y-0 md:border-x border-slate-800">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
-                  MATCH TOTAL
-                </span>
-                <span className="text-xl sm:text-2xl font-black text-white">
-                  {(prediction.expected_home_goals + prediction.expected_away_goals).toFixed(2)}
-                </span>
-                <span className="text-[10px] font-bold text-slate-400 mt-0.5">
-                  Expected Total Goals
-                </span>
+              <div className="flex min-h-[148px] flex-col items-center justify-center text-center border-l border-slate-700/80 px-2 sm:px-6 py-3">
+                <ClubBadge club={awayClub} size="medium" showGlow={true} className="mb-3" />
+                <span className="w-full text-xs sm:text-base font-black text-white leading-tight min-h-5">{prediction.away_team}</span>
+                <span className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2">Away xG</span>
+                <div className="text-2xl sm:text-3xl leading-none font-black text-cyan-400 tracking-tight mt-1">{prediction.expected_away_goals.toFixed(2)}</div>
               </div>
 
-              {/* Away Team xG */}
-              <div className="flex items-center justify-start md:justify-end gap-4 text-left md:text-right">
-                <div className="order-2 md:order-1">
-                  <span className="text-base sm:text-lg font-black text-white block">
-                    {prediction.away_team}
-                  </span>
-                  <span className="text-[11px] text-slate-400 font-bold block mb-1">
-                    Expected Goals (λA)
-                  </span>
-                  <div className="text-3xl sm:text-4xl font-black text-cyan-400 tracking-tight">
-                    {prediction.expected_away_goals.toFixed(2)}
-                  </div>
-                </div>
-                <ClubBadge club={awayClub} size="large" showGlow={true} className="order-1 md:order-2" />
+              <div className="col-span-2 flex items-center justify-center gap-2 border-t border-slate-800 pt-2 text-center">
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Match Total</span>
+                <span className="text-base font-black text-white">{(prediction.expected_home_goals + prediction.expected_away_goals).toFixed(2)}</span>
+                <span className="text-[9px] font-bold text-slate-400">Expected Goals</span>
               </div>
             </div>
 
-            {/* Visual Goal Share Ratio Bar */}
-            <div className="mt-5">
-              <div className="flex justify-between items-center text-xs font-bold text-slate-400 mb-1.5">
+            <div className="mt-3">
+              <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 mb-1.5">
                 <span>{homeClub.shortName} Share: {Math.round((prediction.expected_home_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100)}%</span>
                 <span>{awayClub.shortName} Share: {Math.round((prediction.expected_away_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100)}%</span>
               </div>
               <div className="h-2 w-full rounded-full overflow-hidden flex bg-slate-950 border border-slate-800">
-                <div
-                  style={{
-                    width: `${(prediction.expected_home_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100}%`,
-                    backgroundColor: homeClub.primaryColor || '#00ff85',
-                  }}
-                  className="h-full rounded-l-full transition-all duration-700"
-                />
-                <div
-                  style={{
-                    width: `${(prediction.expected_away_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100}%`,
-                    backgroundColor: awayClub.primaryColor || '#00d2ff',
-                  }}
-                  className="h-full rounded-r-full transition-all duration-700"
-                />
+                <div style={{ width: `${(prediction.expected_home_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100}%`, backgroundColor: homeClub.primaryColor || '#00ff85' }} className="h-full rounded-l-full transition-all duration-700" />
+                <div style={{ width: `${(prediction.expected_away_goals / (prediction.expected_home_goals + prediction.expected_away_goals || 1)) * 100}%`, backgroundColor: awayClub.primaryColor || '#00d2ff' }} className="h-full rounded-r-full transition-all duration-700" />
               </div>
             </div>
           </div>
-
-          {/* Tri-Hybrid Outcome Probabilities */}
-          <ProbabilityBar
-            homeTeam={prediction.home_team}
-            awayTeam={prediction.away_team}
-            homeWinP={prediction.home_win_prob}
-            drawP={prediction.draw_prob}
-            awayWinP={prediction.away_win_prob}
-          />
 
           {/* Top Exact Scorelines (Poisson) */}
           <ScorelineGrid scores={prediction.top_scores} />

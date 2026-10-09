@@ -121,8 +121,12 @@ def ingest_data():
                         'FTHG': fthg,
                         'FTAG': ftag,
                         'FTR': ftr,
-                        'HS': 13, 'AS': 11, 'HST': max(fthg + 2, 4), 'AST': max(ftag + 2, 3),
-                        'HC': 5, 'AC': 4, 'HF': 10, 'AF': 11, 'HY': 1, 'AY': 2, 'HR': 0, 'AR': 0
+                        # The basic fixtures feed does not include match stats.
+                        # Keep those measurements missing instead of fabricating
+                        # identical shot counts for every club.
+                        'HS': np.nan, 'AS': np.nan, 'HST': np.nan, 'AST': np.nan,
+                        'HC': np.nan, 'AC': np.nan, 'HF': np.nan, 'AF': np.nan,
+                        'HY': np.nan, 'AY': np.nan, 'HR': np.nan, 'AR': np.nan
                     })
             if finished_matches:
                 dfs.append(pd.DataFrame(finished_matches))
@@ -142,11 +146,11 @@ def ingest_data():
     # Actual xG Shot-Quality Modeling
     df_raw['Home_xG'] = np.clip(
         0.32 * df_raw['HST'] + 0.055 * np.maximum(df_raw['HS'] - df_raw['HST'], 0) +
-        0.035 * df_raw['HC'] + 0.12 - 0.25 * df_raw['HR'], 0.15, 6.0
+        0.035 * df_raw['HC'] - 0.25 * df_raw['HR'], 0.15, 6.0
     )
     df_raw['Away_xG'] = np.clip(
         0.32 * df_raw['AST'] + 0.055 * np.maximum(df_raw['AS'] - df_raw['AST'], 0) +
-        0.035 * df_raw['AC'] - 0.05 - 0.25 * df_raw['AR'], 0.15, 6.0
+        0.035 * df_raw['AC'] - 0.25 * df_raw['AR'], 0.15, 6.0
     )
     df_raw['xG_Diff'] = df_raw['Home_xG'] - df_raw['Away_xG']
 
@@ -164,7 +168,7 @@ def engineer_features(df_raw):
 
     # 1. Dynamic Elo System
     K_FACTOR = 28
-    HOME_ADVANTAGE = 65
+    HOME_ADVANTAGE = 50
     INITIAL_ELO = 1500.0
 
     all_teams = set(df_raw['HomeTeam']).union(set(df_raw['AwayTeam']))
@@ -178,7 +182,9 @@ def engineer_features(df_raw):
 
         home_elos.append(r_home)
         away_elos.append(r_away)
-        elo_diffs.append((r_home + HOME_ADVANTAGE) - r_away)
+        # Keep raw team-strength difference as a model feature. Home advantage
+        # is already accounted for in the Elo update's expected score below.
+        elo_diffs.append(r_home - r_away)
 
         e_home = 1.0 / (1.0 + 10.0 ** (-((r_home + HOME_ADVANTAGE) - r_away) / 400.0))
         e_away = 1.0 - e_home
@@ -300,48 +306,65 @@ class ActualXGDixonColes:
         self.xi = xi
         self.attack_xg = {}
         self.defense_xg = {}
+        self.teams_with_xg = set()
         self.home_adv = 0.25
         self.league_avg_xg = 1.35
 
     def fit(self, matches_df):
+        xg_matches = matches_df.dropna(subset=['Home_xG', 'Away_xG'])
+        if xg_matches.empty:
+            raise ValueError("Cannot fit the xG model without matches containing shot statistics.")
+
         max_date = matches_df['Date'].max()
-        weights = np.exp(-self.xi * (max_date - matches_df['Date']).dt.days)
+        weights = np.exp(-self.xi * (max_date - xg_matches['Date']).dt.days)
         all_teams = sorted(list(set(matches_df['HomeTeam']).union(set(matches_df['AwayTeam']))))
-        
-        home_xg_sum = (matches_df['Home_xG'] * weights).sum()
-        away_xg_sum = (matches_df['Away_xG'] * weights).sum()
+
+        home_xg_sum = (xg_matches['Home_xG'] * weights).sum()
+        away_xg_sum = (xg_matches['Away_xG'] * weights).sum()
         w_sum = weights.sum()
         
         self.league_avg_xg = (home_xg_sum + away_xg_sum) / (2.0 * w_sum)
-        self.home_adv = np.clip((home_xg_sum - away_xg_sum) / (2.0 * w_sum), 0.15, 0.40)
+        self.home_adv = np.clip((home_xg_sum - away_xg_sum) / (2.0 * w_sum), 0.05, 0.25)
         
         for t in all_teams:
-            h_sub = matches_df[matches_df['HomeTeam'] == t]
-            a_sub = matches_df[matches_df['AwayTeam'] == t]
+            h_sub = xg_matches[xg_matches['HomeTeam'] == t]
+            a_sub = xg_matches[xg_matches['AwayTeam'] == t]
             
             created_xg = (h_sub['Home_xG'] * weights.loc[h_sub.index]).sum() + (a_sub['Away_xG'] * weights.loc[a_sub.index]).sum()
             conceded_xg = (h_sub['Away_xG'] * weights.loc[h_sub.index]).sum() + (a_sub['Home_xG'] * weights.loc[a_sub.index]).sum()
             t_w = weights.loc[h_sub.index].sum() + weights.loc[a_sub.index].sum()
             
             if t_w > 0:
+                self.teams_with_xg.add(t)
                 self.attack_xg[t] = np.log(max((created_xg / t_w) / self.league_avg_xg, 0.2))
                 self.defense_xg[t] = np.log(max((conceded_xg / t_w) / self.league_avg_xg, 0.2))
             else:
                 self.attack_xg[t] = 0.0
                 self.defense_xg[t] = 0.0
 
-    def predict_lambdas(self, home_team, away_team):
-        att_h = self.attack_xg.get(home_team, 0.0)
-        def_a = self.defense_xg.get(away_team, 0.0)
-        att_a = self.attack_xg.get(away_team, 0.0)
-        def_h = self.defense_xg.get(home_team, 0.0)
-        
+    def predict_lambdas(self, home_team, away_team, home_elo=None, away_elo=None):
+        # The shot based ratings can be stale during a new season, especially
+        # when the fixtures feed has no shot stats. Fold current results based
+        # Elo into every club's attack/defence rates, rather than only using it
+        # for clubs absent from the historical xG data.
+        def elo_adjustment(elo):
+            if elo is None or not np.isfinite(float(elo)):
+                return 0.0
+            return float(np.clip((float(elo) - 1500.0) * 0.0012, -0.45, 0.45))
+
+        home_strength = elo_adjustment(home_elo)
+        away_strength = elo_adjustment(away_elo)
+        att_h = self.attack_xg.get(home_team, 0.0) + home_strength
+        def_a = self.defense_xg.get(away_team, 0.0) - away_strength
+        att_a = self.attack_xg.get(away_team, 0.0) + away_strength
+        def_h = self.defense_xg.get(home_team, 0.0) - home_strength
+
         lh = self.league_avg_xg * np.exp(att_h + def_a) + self.home_adv
-        la = self.league_avg_xg * np.exp(att_a + def_h) - (0.4 * self.home_adv)
+        la = self.league_avg_xg * np.exp(att_a + def_h)
         return max(lh, 0.20), max(la, 0.20)
 
-    def predict_match_probs(self, home_team, away_team, max_goals=8):
-        lh, la = self.predict_lambdas(home_team, away_team)
+    def predict_match_probs(self, home_team, away_team, max_goals=8, home_elo=None, away_elo=None):
+        lh, la = self.predict_lambdas(home_team, away_team, home_elo, away_elo)
         h_probs = [poisson.pmf(i, lh) for i in range(max_goals)]
         a_probs = [poisson.pmf(j, la) for j in range(max_goals)]
         matrix = np.outer(h_probs, a_probs)
@@ -403,7 +426,9 @@ def train_models(dataset):
     print("Trained and calibrated XGBoost Classifier.")
 
     # Fit Strategy A: Continuous xG Margin Regressor
-    y_margin = df_clean['xG_Diff'].values
+    margin_mask = df_clean['xG_Diff'].notna()
+    X_margin = X.loc[margin_mask]
+    y_margin = df_clean.loc[margin_mask, 'xG_Diff'].values
     margin_reg = xgb.XGBRegressor(
         n_estimators=130,
         max_depth=3,
@@ -414,16 +439,16 @@ def train_models(dataset):
         reg_lambda=1.2,
         random_state=42
     )
-    margin_reg.fit(X, y_margin)
+    margin_reg.fit(X_margin, y_margin)
 
     # 1D Calibrator on Predicted Margins
-    margin_preds = margin_reg.predict(X)
+    margin_preds = margin_reg.predict(X_margin)
     margin_cal = CalibratedClassifierCV(
         estimator=xgb.XGBClassifier(n_estimators=40, max_depth=2, random_state=42),
         method='sigmoid',
         cv=3
     )
-    margin_cal.fit(margin_preds.reshape(-1, 1), y)
+    margin_cal.fit(margin_preds.reshape(-1, 1), y[margin_mask.values])
 
     # Threshold Optimization
     best_acc = 0.0
@@ -432,7 +457,7 @@ def train_models(dataset):
         for t2 in np.linspace(0.05, 0.6, 12):
             if t2 > t1:
                 preds = np.where(margin_preds > t2, 0, np.where(margin_preds < t1, 2, 1))
-                acc = accuracy_score(y, preds)
+                acc = accuracy_score(y[margin_mask.values], preds)
                 if acc > best_acc:
                     best_acc = acc
                     best_t1, best_t2 = t1, t2
@@ -534,7 +559,7 @@ def predict_match(home_team, away_team, latest_stats, xg_dc_model, calibrated_xg
 
     feat_df = pd.DataFrame([feat_dict])[feature_cols]
 
-    dc_p = xg_dc_model.predict_match_probs(home_team, away_team)
+    dc_p = xg_dc_model.predict_match_probs(home_team, away_team, home_elo=h['Elo'], away_elo=a['Elo'])
     xgb_p = calibrated_xgb.predict_proba(feat_df)[0]
     margin_pred = float(margin_reg.predict(feat_df)[0])
     margin_p = margin_cal.predict_proba([[margin_pred]])[0]
@@ -551,9 +576,12 @@ def predict_match(home_team, away_team, latest_stats, xg_dc_model, calibrated_xg
         verdict = f"{away_team} Win"
 
     # Unified xG
-    lh_base, la_base = xg_dc_model.predict_lambdas(home_team, away_team)
+    lh_base, la_base = xg_dc_model.predict_lambdas(home_team, away_team, h['Elo'], a['Elo'])
     tot_xg = lh_base + la_base
-    consensus_margin = 0.40 * (lh_base - la_base) + 0.60 * margin_pred
+    # Keep the matchup-specific xG forecast as the main signal. The margin
+    # model is useful as a correction, but can regress toward an average when
+    # current-season shot data is unavailable.
+    consensus_margin = 0.70 * (lh_base - la_base) + 0.30 * margin_pred
     lh = max(round((tot_xg + consensus_margin) / 2.0, 2), 0.20)
     la = max(round((tot_xg - consensus_margin) / 2.0, 2), 0.20)
 

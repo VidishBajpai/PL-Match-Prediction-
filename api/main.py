@@ -276,7 +276,9 @@ def run_prediction(home_team: str, away_team: str, rest_home: int = 7, rest_away
     feat_df = pd.DataFrame([feat_dict])[feature_cols]
 
     # Model inference
-    dc_p = MODELS["dc"].predict_match_probs(home_team, away_team)
+    dc_p = MODELS["dc"].predict_match_probs(
+        home_team, away_team, home_elo=h['elo'], away_elo=a['elo']
+    )
     xgb_p = MODELS["xgb"].predict_proba(feat_df)[0]
     margin_pred = float(MODELS["margin_reg"].predict(feat_df)[0])
     margin_p = MODELS["margin_cal"].predict_proba([[margin_pred]])[0]
@@ -295,9 +297,14 @@ def run_prediction(home_team: str, away_team: str, rest_home: int = 7, rest_away
         verdict = f"{away_team.upper()} WIN"
 
     # Consensus Expected Goals
-    lh_base, la_base = MODELS["dc"].predict_lambdas(home_team, away_team)
+    lh_base, la_base = MODELS["dc"].predict_lambdas(
+        home_team, away_team, h['elo'], a['elo']
+    )
     tot_xg = lh_base + la_base
-    consensus_margin = 0.40 * (lh_base - la_base) + 0.60 * margin_pred
+    # Retain the matchup-specific xG difference as the dominant signal. The
+    # learned margin can regress toward the league average when recent shot
+    # data is missing, so use it as a smaller correction.
+    consensus_margin = 0.70 * (lh_base - la_base) + 0.30 * margin_pred
     lh = max(round((tot_xg + consensus_margin) / 2.0, 2), 0.20)
     la = max(round((tot_xg - consensus_margin) / 2.0, 2), 0.20)
 
@@ -342,19 +349,38 @@ def health_check():
 
 CURRENT_PL_TEAMS = {
     'Arsenal', 'Aston Villa', 'Bournemouth', 'Brentford', 'Brighton',
-    'Chelsea', 'Crystal Palace', 'Everton', 'Fulham', 'Ipswich',
-    'Leicester', 'Liverpool', 'Man City', 'Man United', 'Newcastle',
-    "Nott'm Forest", 'Southampton', 'Tottenham', 'West Ham', 'Wolves'
+    'Chelsea', 'Coventry City FC', 'Crystal Palace', 'Everton', 'Fulham',
+    'Hull City AFC', 'Ipswich', 'Leeds United FC', 'Liverpool',
+    'Man City', 'Man United', 'Newcastle', "Nott'm Forest", 'Sunderland AFC',
+    'Tottenham'
 }
+
+
+def current_team_stats(team: str) -> Dict[str, Any]:
+    """Return a complete current-season team record, including new clubs."""
+    defaults = {
+        'name': team,
+        'elo': round(float(ELO_RATINGS.get(team, 1500.0)), 1),
+        'long_xgd': 0.0,
+        'long_xg': 1.35,
+        'long_xga': 1.35,
+        'long_gd': 0.0,
+        'long_net_st': 0.0,
+        'long_ppg': 1.35,
+        'short_xgd': 0.0,
+        'short_form_5': 7.0,
+        'short_gd': 0.0,
+        'short_net_st': 0.0,
+        'venue_home_ppg': 1.5,
+        'venue_away_ppg': 1.2,
+    }
+    return {**defaults, **LATEST_TEAM_STATS.get(team, {}), 'name': team}
 
 
 @app.get("/api/teams")
 def get_teams():
     """Returns sorted list of current Premier League clubs with current Elo and baseline stats."""
-    current_teams = [
-        stats for name, stats in LATEST_TEAM_STATS.items()
-        if name in CURRENT_PL_TEAMS
-    ]
+    current_teams = [current_team_stats(name) for name in CURRENT_PL_TEAMS]
     sorted_teams = sorted(current_teams, key=lambda x: x['elo'], reverse=True)
     return JSONResponse(
         content={"teams": sorted_teams},
@@ -376,10 +402,7 @@ def predict_match_endpoint(req: PredictionRequest):
 @app.get("/api/rankings")
 def get_power_rankings():
     """Returns current Premier League clubs ranked by dynamic Elo ratings and rolling actual xGD."""
-    clubs = [
-        c for c in LATEST_TEAM_STATS.values()
-        if c["name"] in CURRENT_PL_TEAMS
-    ]
+    clubs = [current_team_stats(name) for name in CURRENT_PL_TEAMS]
     sorted_clubs = sorted(clubs, key=lambda x: x['elo'], reverse=True)
     return JSONResponse(
         content={
