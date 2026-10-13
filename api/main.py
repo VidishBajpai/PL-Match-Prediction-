@@ -67,6 +67,7 @@ FRONTEND_DIST = ROOT_DIR / "frontend" / "dist"
 MODELS: Dict[str, Any] = {}
 LATEST_TEAM_STATS: Dict[str, Dict[str, Any]] = {}
 ELO_RATINGS: Dict[str, float] = {}
+FORM_DATASET_MTIME_NS: Optional[int] = None
 
 
 # ---------------------------------------------------------
@@ -140,7 +141,7 @@ class CustomUnpickler(pickle.Unpickler):
 # Startup: Load Models & Team Statistics
 # ---------------------------------------------------------
 def load_production_models():
-    global MODELS, LATEST_TEAM_STATS, ELO_RATINGS
+    global MODELS, LATEST_TEAM_STATS, ELO_RATINGS, FORM_DATASET_MTIME_NS
 
     print("Loading ML models from saved_models/...")
     with open(MODELS_DIR / "calibrated_xgb.pkl", "rb") as f:
@@ -230,7 +231,43 @@ def load_production_models():
             # Explicitly use results rather than the pre-match model feature.
             stats['short_form_5'] = float(sum(recent_points.get(team, [])[-5:]))
 
+    if DATASET_PATH.exists():
+        FORM_DATASET_MTIME_NS = DATASET_PATH.stat().st_mtime_ns
+
     print(f"Loaded {len(LATEST_TEAM_STATS)} clubs into memory.")
+
+
+def refresh_team_form_from_dataset():
+    global FORM_DATASET_MTIME_NS
+
+    if not DATASET_PATH.exists():
+        return
+
+    dataset_mtime_ns = DATASET_PATH.stat().st_mtime_ns
+    if dataset_mtime_ns == FORM_DATASET_MTIME_NS:
+        return
+
+    completed = pd.read_csv(DATASET_PATH)
+    completed['Date'] = pd.to_datetime(completed['Date'])
+    completed['FTHG'] = pd.to_numeric(completed['FTHG'], errors='coerce')
+    completed['FTAG'] = pd.to_numeric(completed['FTAG'], errors='coerce')
+    completed = completed.dropna(subset=['FTHG', 'FTAG'])
+    completed = completed[completed['FTR'].isin(['H', 'D', 'A'])].sort_values(
+        ['Date', 'Match_ID'], kind='stable'
+    )
+
+    recent_points: Dict[str, List[int]] = {}
+    for match in completed.itertuples(index=False):
+        home_points = 3 if match.FTHG > match.FTAG else 1 if match.FTHG == match.FTAG else 0
+        away_points = 3 if match.FTAG > match.FTHG else 1 if match.FTAG == match.FTHG else 0
+        recent_points.setdefault(match.HomeTeam, []).append(home_points)
+        recent_points.setdefault(match.AwayTeam, []).append(away_points)
+
+    for team in CURRENT_PL_TEAMS:
+        if team in LATEST_TEAM_STATS:
+            LATEST_TEAM_STATS[team]['short_form_5'] = float(sum(recent_points.get(team, [])[-5:]))
+
+    FORM_DATASET_MTIME_NS = dataset_mtime_ns
 
 
 @app.on_event("startup")
@@ -401,6 +438,7 @@ def current_team_stats(team: str) -> Dict[str, Any]:
 @app.get("/api/teams")
 def get_teams():
     """Returns sorted list of current Premier League clubs with current Elo and baseline stats."""
+    refresh_team_form_from_dataset()
     current_teams = [current_team_stats(name) for name in CURRENT_PL_TEAMS]
     sorted_teams = sorted(current_teams, key=lambda x: x['elo'], reverse=True)
     return JSONResponse(
@@ -412,6 +450,7 @@ def get_teams():
 @app.post("/api/predict", response_model=PredictionResponse)
 def predict_match_endpoint(req: PredictionRequest):
     """Predicts a match outcome between home_team and away_team."""
+    refresh_team_form_from_dataset()
     return run_prediction(
         home_team=req.home_team,
         away_team=req.away_team,
@@ -423,6 +462,7 @@ def predict_match_endpoint(req: PredictionRequest):
 @app.get("/api/rankings")
 def get_power_rankings():
     """Return current PL clubs with Elo, xGD, and points from their last five completed league matches."""
+    refresh_team_form_from_dataset()
     clubs = [current_team_stats(name) for name in CURRENT_PL_TEAMS]
     sorted_clubs = sorted(clubs, key=lambda x: x['elo'], reverse=True)
     return JSONResponse(
@@ -448,6 +488,7 @@ def get_power_rankings():
 @app.get("/api/gameweek")
 def get_gameweek_fixtures():
     """Return upcoming Premier League fixtures from football-data.org."""
+    refresh_team_form_from_dataset()
     try:
         response = requests.get(
             API_BASE_URL,
