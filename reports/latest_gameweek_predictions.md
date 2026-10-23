@@ -1,5 +1,5 @@
 # ⚽ Premier League Automated Game-Week Predictions
-*Generated on: 2026-10-20 11:15:16 UTC via Automated Scheduled Pipeline*
+*Generated on: 2026-10-23 10:50:25 UTC via Automated Scheduled Pipeline*
 
 ## 📊 Model Architecture: Tri-Hybrid Master Ensemble
 - **40% Actual xG Time-Decayed Dixon-Coles** (Shot-Quality Goal Expectancy)
@@ -38,7 +38,7 @@
 | 2026-10-31 | **Tottenham** vs **Crystal Palace** | **Tottenham Win** | 38.4% | 22.8% | 38.8% | 2.08 - 1.97 | 2-1 (7.4%), 2-2 (7.3%), 1-1 (7.1%) |
 | 2026-10-31 | **Aston Villa** vs **Fulham** | **Aston Villa Win** | 50.9% | 22.0% | 27.1% | 2.35 - 1.76 | 2-1 (8.0%), 2-2 (7.0%), 1-1 (6.8%) |
 | 2026-11-01 | **Liverpool** vs **Arsenal** | **Liverpool Win** | 34.1% | 23.7% | 42.3% | 1.79 - 2.18 | 1-2 (8.0%), 1-1 (7.4%), 2-2 (7.2%) |
-| 2026-11-02 | **Newcastle** vs **Everton** | **Newcastle Win** | 44.3% | 23.1% | 32.5% | 2.41 - 1.85 | 2-1 (7.6%), 2-2 (7.0%), 1-1 (6.3%) |
+| 2026-11-02 | **Newcastle** vs **Everton** | **Newcastle Win** | 44.3% | 23.1% | 32.6% | 2.41 - 1.85 | 2-1 (7.6%), 2-2 (7.0%), 1-1 (6.3%) |
 
 ---
 
