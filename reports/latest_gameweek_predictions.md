@@ -1,5 +1,5 @@
 # ⚽ Premier League Automated Game-Week Predictions
-*Generated on: 2026-11-24 17:20:21 UTC via Automated Scheduled Pipeline*
+*Generated on: 2026-11-27 15:56:42 UTC via Automated Scheduled Pipeline*
 
 ## 📊 Model Architecture: Tri-Hybrid Master Ensemble
 - **40% Actual xG Time-Decayed Dixon-Coles** (Shot-Quality Goal Expectancy)
